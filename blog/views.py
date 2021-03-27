@@ -9,13 +9,55 @@ from . import models
 import random
 import string
 import datetime
+import markdown
 
 # Create your views here.
 
 def hello_world(request):
     return HttpResponse("你好，世界")
 def index(request):
-    return HttpResponse("主页测试")
+    articles=models.Article.objects.all()
+    context={'articles':articles***REMOVED***
+#   return HttpResponse("主页测试")
+    return render(request,'blog/index.html',context)
+
+def article_detail(request, id):
+    article = models.Article.objects.get(id=id)
+    article.body = markdown.markdown(article.body,
+        extensions=[
+        # 包含 缩写、表格等常用扩展
+        'markdown.extensions.extra',
+        # 语法高亮扩展
+        'markdown.extensions.codehilite',
+        ])
+    context = { 'article': article***REMOVED***
+    return render(request,'blog/article_detail.html',context)
+
+def create_article(request):
+    if request.method == 'GET':
+        return render(request,'blog/create_article.html')
+    if request.method == 'POST':
+        new_article=models.Article()
+        #临时设置成id1
+        new_article.author=models.User.objects.get(id=1)
+        title=request.POST['title']
+        body=request.POST['body']
+        
+        if title.split()==[] or body.split()==[]:
+            context={'the_url':reverse('blog:create_article'),
+                    'hint':'文章主体或标题不能为空',
+                    'page':'写文章界面',
+                ***REMOVED***
+            return render(request,'blog/hint.html',context)
+        else:
+            new_article.title=title
+            new_article.body=body
+            new_article.save()
+            context={'the_url':reverse('blog:index'),
+                    'hint':'文章创建成功',
+                    'page':'主页',
+                ***REMOVED***
+            return render(request,'blog/hint.html',context)
 
 def register(request):
     #注册页面

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "blog/base.html" %***REMOVED***
+{% load static %***REMOVED***
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %***REMOVED***首页:文章列表{% endblock title %***REMOVED***
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %***REMOVED***
+
+<!-- 定义放置文章标题的div容器 -->
+<div class="container">
+    <div class="row mt-2">
+
+        {% for article in articles %***REMOVED***
+        <!-- 文章内容 -->
+        <div class="col-12 mb-4">
+        <!-- 卡片容器 -->
+            <div class="card h-100">
+                <!-- 标题 -->
+                <h4 class="card-header">{{ article.title ***REMOVED******REMOVED***</h4>
+                <!-- 摘要 -->
+                <div class="card-body">
+                    <p class="card-text">{{ article.body|slice:'100' ***REMOVED******REMOVED***...</p>
+                </div>
+                <!-- 注脚 -->
+                <div class="card-footer">
+                    <a href="{% url 'blog:article_detail' article.id %***REMOVED***" class="btn btn-primary">阅读本文</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %***REMOVED***
+
+    </div>
+</div>
+{% endblock content %***REMOVED***

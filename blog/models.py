@@ -6,7 +6,7 @@ class User(models.Model):
     # ID自动创建
     # 用户名不可重复
     username = models.CharField(max_length=50, unique=True, verbose_name='用户名')
-    signature = models.CharField(max_length=50 ,verbose_name='个性签名',default='该用户未设置个性签名')
+    signature = models.CharField(max_length=50 ,verbose_name='个性签名',blank=True,default='')
     email = models.CharField(max_length=100, verbose_name='邮箱')
     password = models.CharField(max_length=100, verbose_name='密码字段')
     # 状态有正常'A',封禁'B',已注销'C'
@@ -24,8 +24,8 @@ class User(models.Model):
 class Article(models.Model):
     # ID自动创建
     # 因为作者不会被删除，所以文章在作者注销账号后，依然会存在于数据库
-    author_id = models.ForeignKey(
-        User, on_delete=models.RESTRICT, verbose_name='文章作者ID')
+    author = models.ForeignKey(
+        User, on_delete=models.RESTRICT, verbose_name='文章作者')
     title = models.CharField(max_length=100, verbose_name='标题')
     body = models.TextField('正文')
     created = models.DateTimeField(default=timezone.now, verbose_name='创建时间')

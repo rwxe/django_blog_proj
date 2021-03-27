@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% extends "blog/base.html" %***REMOVED***
+{% load static %***REMOVED***
+
+{% block title %***REMOVED***文章详情{% endblock title %***REMOVED***
+
+{% block content %***REMOVED***
+<div class="container">
+    <div class="row">
+        <!-- 展示文章的title -->
+        <h1 class="col-12 mt-4 mb-4">{{ article.title ***REMOVED******REMOVED***</h1>
+        <!-- 展示文章的author -->
+        <div class="alert alert-success">作者：{{ article.author ***REMOVED******REMOVED*** </div>
+        <!-- 展示文章author的signature -->
+        <div class="alert alert-light">{{ article.author.signature ***REMOVED******REMOVED***</div>
+        <div class="col-12"></div>
+        <div class="col-3 alert alert-light">创建于 {{ article.created |date:"Y/m/d H:i:s"***REMOVED******REMOVED***</div>
+        <div class="col-3 alert alert-light">更新于 {{ article.updated |date:"Y/m/d H:i:s"***REMOVED******REMOVED***</div>
+        <!-- 文章正文 -->
+        <div class="col-12 bg-light">
+            <p>{{ article.body |safe***REMOVED******REMOVED***</p>
+        </div>
+    </div>
+</div>
+{% endblock content %***REMOVED***

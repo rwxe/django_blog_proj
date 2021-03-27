@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "blog/base.html" %***REMOVED***
+{% load static %***REMOVED***
+<!-- 写入 base.html 中定义的 title -->
+{% block title %***REMOVED*** 写文章 {% endblock title %***REMOVED***
+<!-- 写入 base.html 中定义的 content -->
+{% block content %***REMOVED***
+<!-- 写文章表单 -->
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <br>
+            <!-- 提交文章的表单 -->
+            <form method="POST" action="">
+                <!-- Django中需要POST数据的地方都必须有csrf_token -->
+                {% csrf_token %***REMOVED***
+                <!-- 文章标题 -->
+                <div class="form-group">
+                    <!-- 标签 -->
+                    <label for="title">文章标题</label>
+                    <!-- 文本框 -->
+                    <input type="text" class="form-control" id="title" name="title">
+                </div>
+                <!-- 文章正文 -->
+                <div class="form-group">
+                    <label for="body">文章正文</label>
+                    <!-- 文本区域 -->
+                    <textarea type="text" class="form-control" id="body" name="body" rows="12" placeholder="支持Markdown语法"></textarea>
+                </div>
+                <!-- 提交按钮 -->
+                <button type="submit" class="btn btn-primary">完成</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %***REMOVED***
