@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "blog/base.html" %***REMOVED***
+{% load static %***REMOVED***
+<!-- 写入 base.html 中定义的 title -->
+{% block title %***REMOVED*** 修改{{article.title***REMOVED******REMOVED*** {% endblock title %***REMOVED***
+<!-- 写入 base.html 中定义的 content -->
+{% block content %***REMOVED***
+<!-- 写文章表单 -->
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <br>
+            <!-- 提交文章的表单 -->
+            <form method="POST" action="#">
+                <!-- Django中需要POST数据的地方都必须有csrf_token -->
+                {% csrf_token %***REMOVED***
+                <!-- 文章标题 -->
+                <div class="form-group">
+                    <!-- 标签 -->
+                    <label for="title">文章标题</label>
+                    <!-- 文本框 -->
+                    <input type="text" class="form-control" id="title" name="title" value="{{article.title***REMOVED******REMOVED***">
+
+
+                </div>
+                <!-- 文章正文 -->
+                <div class="form-group">
+                    <label for="body">文章正文</label>
+    <select class="form-control col-3" name="codehilite_style">
+        <option value="{{article.codehilite_style***REMOVED******REMOVED***" selected>{{article.codehilite_style***REMOVED******REMOVED***</option>
+        <option value="solarized-light" >solarized-light(默认)</option>
+        <option value="vim" >vim</option>
+        <option value="monokai" >monokai</option>
+        <option value="emacs" >emacs</option>
+    </select>
+
+                    <!-- 文本区域 -->
+                    <textarea type="text" class="form-control" id="body" name="body" rows="12" placeholder="支持Markdown语法">{{article.body***REMOVED******REMOVED***</textarea>
+                </div>
+                <!-- 提交按钮 -->
+                <button type="submit" class="btn btn-primary">完成</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %***REMOVED***

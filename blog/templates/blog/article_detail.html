@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{% get_static_prefix  %***REMOVED***md_css/{{article.codehilite_style***REMOVED******REMOVED***.css">
 {% endblock  %***REMOVED***
 
-{% block title %***REMOVED***文章详情{% endblock title %***REMOVED***
+{% block title %***REMOVED***{{article.title***REMOVED******REMOVED***{% endblock title %***REMOVED***
 
 {% block content %***REMOVED***
 <div class="container">
@@ -21,6 +21,18 @@
         <div class="col-3 alert alert-light">创建于 {{ article.created |date:"Y/m/d H:i:s"***REMOVED******REMOVED***</div>
         <div class="col-3 alert alert-light">更新于 {{ article.updated |date:"Y/m/d H:i:s"***REMOVED******REMOVED***</div>
         <!-- 文章正文 -->
+        {%  if request.session.id == article.author.id  %***REMOVED***
+        <div class="dropdown">
+            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+             操作
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'blog:update_article' article.id %***REMOVED***">修改</a>
+                <a class="dropdown-item" href="{%  url 'blog:delete_article' article.id %***REMOVED***">删除</a>
+            </div>
+        </div>
+        {% endif  %***REMOVED***
         <div class="col-12 bg-light">
             <p>{{ article.body |safe***REMOVED******REMOVED***</p>
         </div>

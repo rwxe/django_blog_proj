@@ -12,6 +12,21 @@ import datetime
 import markdown
 
 # Create your views here.
+def check_logged_in(func):
+    #检查用户是否登录了
+    def wrapper(*args,**kw):
+        #FOR DEBUG
+        print("args:",args)
+        print("kw:",kw)
+        request=args[0]
+        if 'username' not in request.session:
+            context={'the_url':reverse('blog:index'),
+                    'hint':'你还没登录',
+                    'page':'主页',
+                ***REMOVED***
+            return render(request,'blog/hint.html',context)
+        return func(*args,**kw)
+    return wrapper
 
 def hello_world(request):
     return HttpResponse("你好，世界")
@@ -32,14 +47,14 @@ def article_detail(request, id):
         ])
     context = { 'article': article***REMOVED***
     return render(request,'blog/article_detail.html',context)
-
+@check_logged_in
 def create_article(request):
-    if 'username' not in request.session:
-        context={'the_url':reverse('blog:index'),
-                'hint':'你还没登录',
-                'page':'主页',
-            ***REMOVED***
-        return render(request,'blog/hint.html',context)
+#   if 'username' not in request.session:
+#       context={'the_url':reverse('blog:index'),
+#               'hint':'你还没登录',
+#               'page':'主页',
+#           ***REMOVED***
+#       return render(request,'blog/hint.html',context)
     if request.method == 'GET':
         return render(request,'blog/create_article.html')
     if request.method == 'POST':
@@ -65,6 +80,72 @@ def create_article(request):
                     'page':'主页',
                 ***REMOVED***
             return render(request,'blog/hint.html',context)
+
+
+@check_logged_in
+def update_article(request,id):
+    article=models.Article.objects.get(id=id)
+    if article.author!=models.User.objects.get(id=request.session['id']):
+        #理论上，前端早已禁止这种情况发生
+        context={'the_url':reverse('blog:index'),
+                'hint':'你不是这篇文章的作者',
+                'page':'主页',
+            ***REMOVED***
+        return render(request,'blog/hint.html',context)
+
+    if request.method=='GET':
+        context = { 'article': article***REMOVED***
+        return render(request,'blog/update_article.html',context)
+    if request.method == 'POST':
+        article.codehilite_style=request.POST['codehilite_style']
+        title=request.POST['title']
+        body=request.POST['body']
+        if title.split()==[] or body.split()==[]:
+            context={'the_url':reverse('blog:update_article'),
+                    'hint':'文章主体或标题不能为空',
+                    'page':'修改文章界面',
+                ***REMOVED***
+            return render(request,'blog/hint.html',context)
+        else:
+            article.title=title
+            article.body=body
+            article.save()
+            context={'the_url':reverse('blog:index'),
+                    'hint':'文章修改成功',
+                    'page':'主页',
+                ***REMOVED***
+            return render(request,'blog/hint.html',context)
+
+@check_logged_in
+def delete_article(request,id):
+    article=models.Article.objects.get(id=id)
+    if article.author!=models.User.objects.get(id=request.session['id']):
+        #理论上，前端早已禁止这种情况发生
+        context={'the_url':reverse('blog:index'),
+                'hint':'你不是这篇文章的作者',
+                'page':'主页',
+            ***REMOVED***
+        return render(request,'blog/hint.html',context)
+
+    if request.method=='GET':
+        context = { 'article': article***REMOVED***
+        return render(request,'blog/delete_article.html')
+    if request.method == 'POST':
+        if request.POST.get('confirm')=='on':
+            article.delete()
+            context={'the_url':reverse('blog:index'),
+                    'hint':'文章删除成功',
+                    'page':'主页',
+                ***REMOVED***
+            return render(request,'blog/hint.html',context)
+        else:
+            context={'the_url':reverse('blog:index'),
+                    'hint':'文章删除放弃',
+                    'page':'主页',
+                ***REMOVED***
+            return render(request,'blog/hint.html',context)
+
+
 
 def register(request):
     #注册页面
@@ -107,6 +188,7 @@ def register(request):
             except:
                 return HttpResponse("出BUG了")
 
+    
 
 
 def login(request):
@@ -155,10 +237,8 @@ def login(request):
 def logout(request):
     #读者登出
     if 'username' in request.session:
-        del request.session['username']
-    #删除cookie
-    if 'username' in request.COOKIES:
-        request.delete_cookie('username')
+        print('删掉了session')
+        request.session.flush()
     context={'the_url':reverse('blog:index'),
             'hint':'登出成功了',
             'page':'首页',
