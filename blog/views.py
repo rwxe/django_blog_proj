@@ -47,6 +47,22 @@ def article_detail(request, id):
         ])
     context = { 'article': article***REMOVED***
     return render(request,'blog/article_detail.html',context)
+
+
+@check_logged_in
+def profile(request):
+    articles=models.Article.objects.filter(author_id=request.session.get('id'))
+    user=models.User.objects.get(id=request.session.get('id'))
+    #为了方便，将状态值的人类可读名称直接赋值给status，方便前台调用
+    user.status=models.User.StatusList(user.status).label
+    context={'articles':articles,
+            'user':user,
+        ***REMOVED***
+#   return HttpResponse("主页测试")
+    return render(request,'blog/profile.html',context)
+
+
+
 @check_logged_in
 def create_article(request):
 #   if 'username' not in request.session:
