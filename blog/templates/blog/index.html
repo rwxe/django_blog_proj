@@ -10,8 +10,12 @@
 {% block content %***REMOVED***
 
 <!-- 定义放置文章标题的div容器 -->
-<div class="container">
+
+
+
+<div class="container-fluid">
     <div class="row mt-2">
+        <div class="col-10">
 
         {% for article in articles %***REMOVED***
         <!-- 文章内容 -->
@@ -30,7 +34,26 @@
                 </div>
             </div>
         </div>
+
         {% endfor %***REMOVED***
+        </div>
+        <div class="col-2 mb-4">
+        <!-- 卡片容器 -->
+            <div class="card h-15">
+                <!-- 标题 -->
+                <h4 class="card-header">网站公告</h4>
+                <!-- 摘要 -->
+                <div class="card-body">
+                    <p class="card-text">现在还没公告</p>
+                </div>
+                <!-- 注脚 -->
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary">阅读公告</a>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
 
     </div>
 </div>

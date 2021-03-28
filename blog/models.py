@@ -15,7 +15,7 @@ class User(models.Model):
             ACTIVITY = 'A', '正常'
             BANNED = 'B', '封禁中'
             CLOSE = 'C', '已注销'
-    status = models.CharField(max_length=1, verbose_name='状态',choices=StatusList.choices)
+    status = models.CharField(max_length=1, verbose_name='状态',choices=StatusList.choices,default=StatusList.ACTIVITY)
 
     def __str__(self):
         return self.username
@@ -23,7 +23,8 @@ class User(models.Model):
 
 class Article(models.Model):
     # ID自动创建
-    # 因为作者不会被删除，所以文章在作者注销账号后，依然会存在于数据库
+    # 因为作者不会被删除(至少项目构思之初是这样想的)，
+    # 所以文章在作者注销账号后，依然会存在于数据库
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name='文章作者')
     title = models.CharField(max_length=100, verbose_name='标题')
