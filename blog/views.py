@@ -16,7 +16,7 @@ import markdown
 def hello_world(request):
     return HttpResponse("你好，世界")
 def index(request):
-    articles=models.Article.objects.all()
+    articles=models.Article.objects.order_by('-id')
     context={'articles':articles***REMOVED***
 #   return HttpResponse("主页测试")
     return render(request,'blog/index.html',context)
@@ -40,6 +40,7 @@ def create_article(request):
         new_article=models.Article()
         #临时设置成id1
         new_article.author=models.User.objects.get(id=1)
+        new_article.codehilite_style=request.POST['codehilite_style']
         title=request.POST['title']
         body=request.POST['body']
         

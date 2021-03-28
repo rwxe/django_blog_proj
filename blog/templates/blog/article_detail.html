@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 {% extends "blog/base.html" %***REMOVED***
 {% load static %***REMOVED***
+{% block extra_head  %***REMOVED***
+    <!--代码高亮 -->
+    <link rel="stylesheet" href="{% get_static_prefix  %***REMOVED***md_css/{{article.codehilite_style***REMOVED******REMOVED***.css">
+{% endblock  %***REMOVED***
 
 {% block title %***REMOVED***文章详情{% endblock title %***REMOVED***
 

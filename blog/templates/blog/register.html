@@ -1,21 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-    <title>用户注册</title>
-    {% load static %***REMOVED***
-    <link rel='stylesheet' type='text/css' href="{% static 'blog/style.css' %***REMOVED***"> 
-</head>
-<body>
-    <a class='homepage' href='{%  url 'blog:index'  %***REMOVED***'>首页</a>
-<form action="{% url 'blog:register' %***REMOVED***" method='POST'>
+{% extends "blog/base.html" %***REMOVED***
+{% load static %***REMOVED***
+{% block content %***REMOVED***
+<div class="container col-4 text-center justify-content-center ">
+<form action="#" class="form-signin " method="POST">
 {% csrf_token %***REMOVED***
-        <p>用户名<input type='text' name='username' value='' /></p>
-        <p>邮箱<input type='text' name='email' value='' /></p>
-        <p>密码<input type='password' name='password1' value='' /></p>
-        <p>重复密码<input type='password' name='password2' value='' /></p>
-        <p style="color:red">{{err_msg***REMOVED******REMOVED***</p>
-        <input type='submit' value='注册' />
-    </form>
-</body>
-</html>
+      <h1 class="h3 mb-3 font-weight-normal">注册</h1>
+      <input type="text" name="username" class="form-control" placeholder="用户名" required >
+      <input type="email" name="email" class="form-control" placeholder="邮箱" required>
+      <input type="password" name="password1" class="form-control" placeholder="密码" required>
+      <input type="password" name="password2" class="form-control" placeholder="确认密码" required>
+      <button class="btn btn-lg btn-dark btn-block" type="submit">注册</button>
+</form>
+</div>
+{% endblock content %***REMOVED***
