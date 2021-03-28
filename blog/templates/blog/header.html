@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <!-- 定义导航栏 -->
+{% load static %***REMOVED***
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top"> <a class="navbar-brand" href="{% url 'blog:index'  %***REMOVED***">Django博客测试</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="collapsibleNavbar">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active"> <a class="nav-link" href="{% url 'blog:index'  %***REMOVED***">主页 <span class="sr-only">(current)</span></a> </li>
+      <li class="nav-item "> <a class="nav-link" href="{% url 'blog:index'  %***REMOVED***">主页 </a> </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2 bg-dark" type="text" placeholder="关键字" aria-label="Search">
@@ -14,7 +15,17 @@
     </form>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item"> <a class="nav-link" href="{%  url 'blog:create_article'  %***REMOVED***">写文章</a> </li>
-      <li class="nav-item"> <a class="nav-link" href="#">按钮2</a> </li>
+        {%  if request.session.username  %***REMOVED***
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{request.session.username***REMOVED******REMOVED***</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">个人中心</a>
+          <a class="dropdown-item" href="{%  url 'blog:logout'  %***REMOVED***">登出</a>
+        </div>
+      </li>
+        {%  else  %***REMOVED***
+        <li class="nav-item active"> <a class="nav-link" href="{%  url 'blog:login'  %***REMOVED***">登录</a> </li>
+        {% endif  %***REMOVED***
     </ul>
   </div>
 </nav>

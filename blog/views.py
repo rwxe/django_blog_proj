@@ -34,12 +34,18 @@ def article_detail(request, id):
     return render(request,'blog/article_detail.html',context)
 
 def create_article(request):
+    if 'username' not in request.session:
+        context={'the_url':reverse('blog:index'),
+                'hint':'你还没登录',
+                'page':'主页',
+            ***REMOVED***
+        return render(request,'blog/hint.html',context)
     if request.method == 'GET':
         return render(request,'blog/create_article.html')
     if request.method == 'POST':
         new_article=models.Article()
-        #临时设置成id1
-        new_article.author=models.User.objects.get(id=1)
+        #临时设置成id 1
+        new_article.author=models.User.objects.get(id=request.session['id'])
         new_article.codehilite_style=request.POST['codehilite_style']
         title=request.POST['title']
         body=request.POST['body']
@@ -91,7 +97,7 @@ def register(request):
                 #注册成功
                 context={'the_url':reverse('blog:index'),
                         'hint':'注册成功了',
-                        'page':'首页',
+                        'page':'主页',
                     ***REMOVED***
                 return render(request,'blog/hint.html',context)
             except DataError:
@@ -101,3 +107,60 @@ def register(request):
             except:
                 return HttpResponse("出BUG了")
 
+
+
+def login(request):
+    #登录页面
+
+    if request.method == 'GET':
+        context={***REMOVED***
+        return render(request,'blog/login.html',context)
+    elif request.method=='POST':
+        username=request.POST['username']
+        p1=request.POST['password1']
+
+        try:
+            result=models.User.objects.get(username=username)
+            if result.status!=models.User.StatusList.ACTIVITY:
+                context={'the_url':reverse('blog:index'),
+                        'hint':'登录不成功,因为您被封禁',
+                        'page':'主页',
+                    ***REMOVED***
+                return render(request,'blog/hint.html',context)
+
+            if hashers.check_password(p1,result.password):
+                request.session['username']=username
+                request.session['id']=models.User.objects.get(username=username).id
+                #登录成功
+                context={'the_url':reverse('blog:index'),
+                        'hint':'登录成功了',
+                        'page':'主页',
+                    ***REMOVED***
+                return render(request,'blog/hint.html',context)
+            else:
+                context={'err_msg':'密码错误',
+                    ***REMOVED***
+                return render(request,'blog/login.html',context)
+
+        except models.User.DoesNotExist:
+            context={'err_msg':'此用户名不存在',
+                ***REMOVED***
+            return render(request,'blog/login.html',context)
+        except :
+            return HttpResponse("出BUG了")
+    else:
+        return HttpResponse("出BUG了")
+
+
+def logout(request):
+    #读者登出
+    if 'username' in request.session:
+        del request.session['username']
+    #删除cookie
+    if 'username' in request.COOKIES:
+        request.delete_cookie('username')
+    context={'the_url':reverse('blog:index'),
+            'hint':'登出成功了',
+            'page':'首页',
+        ***REMOVED***
+    return render(request,'blog/hint.html',context)

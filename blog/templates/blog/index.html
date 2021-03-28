@@ -16,6 +16,7 @@
 <div class="container-fluid">
     <div class="row mt-2">
         <div class="col-10">
+      <h3 class="col-12">最新文章</h3>
 
         {% for article in articles %***REMOVED***
         <!-- 文章内容 -->
@@ -26,7 +27,7 @@
                 <h4 class="card-header">{{ article.title ***REMOVED******REMOVED***</h4>
                 <!-- 摘要 -->
                 <div class="card-body">
-                    <p class="card-text">{{ article.body|slice:'100' ***REMOVED******REMOVED***...</p>
+                    <p class="card-text">{{article.author.username***REMOVED******REMOVED***: {{ article.body|slice:'100' ***REMOVED******REMOVED***...</p>
                 </div>
                 <!-- 注脚 -->
                 <div class="card-footer">
