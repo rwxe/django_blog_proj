@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog.apps.BlogConfig'
+    'blog.apps.BlogConfig',
+    'django.core.mail',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 #STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATICFILES_DIRS = [BASE_DIR / 'static',]
+
+# 固定写法设置Email引擎
+# Outlook的SMTP
+# 服务器名称: smtp.office365.com
+# 端口: 587
+# 加密方法: STARTTLS
+EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
+***REMOVED***# 邮箱SMTP服务器地址
+***REMOVED***# SMTP服务的端口号
+***REMOVED***'anyxmfj@outlook.com' #你的邮箱，邮件发送者的邮箱
+***REMOVED***'forthejob1984' #你申请的授权码（略）
+***REMOVED***#与SMTP服务器通信时,是否启用安全模式

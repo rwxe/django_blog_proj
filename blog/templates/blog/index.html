@@ -14,48 +14,33 @@
 
 
 <div class="container-fluid">
-      <h3 class="col-12">最新文章</h3>
+    <h3 class="col-12">最新文章</h3>
     <div class="row mt-2">
-        <div class="col-10">
+        <div class="col-12">
 
-        {% for article in articles %***REMOVED***
-        <!-- 文章内容 -->
-        <div class="col-12 mb-4">
-        <!-- 卡片容器 -->
-            <div class="card h-100">
-                <!-- 标题 -->
-                <h4 class="card-header">{{ article.title ***REMOVED******REMOVED***</h4>
-                <!-- 摘要 -->
-                <div class="card-body">
-                    <p class="card-text">{{article.author.username***REMOVED******REMOVED***: {{ article.body|slice:'100' ***REMOVED******REMOVED***...</p>
-                </div>
-                <!-- 注脚 -->
-                <div class="card-footer">
-                    <a href="{% url 'blog:article_detail' article.id %***REMOVED***" class="btn btn-primary">阅读本文</a>
+            {% for article in articles %***REMOVED***
+            <!-- 文章内容 -->
+            <div class="col-12 mb-4 ">
+                <!-- 卡片容器 -->
+                <div class="card h-100">
+                    <!-- 标题 -->
+                    <h4 class="card-header">{{ article.title ***REMOVED******REMOVED***</h4>
+                    <!-- 摘要 -->
+                    <div class="card-body">
+                        <p class="card-text">{{article.author.username***REMOVED******REMOVED***: {{ article.body|slice:'100' ***REMOVED******REMOVED***...</p>
+                    </div>
+                    <!-- 注脚 -->
+                    <div class="card-footer">
+                        <a href="{% url 'blog:article_detail' article.id %***REMOVED***" class="btn btn-primary">阅读本文</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {% endfor %***REMOVED***
-        </div>
-        <div class="col-2 mb-4">
-        <!-- 卡片容器 -->
-            <div class="card h-15">
-                <!-- 标题 -->
-                <h4 class="card-header">网站公告</h4>
-                <!-- 摘要 -->
-                <div class="card-body">
-                    <p class="card-text">现在还没公告</p>
-                </div>
-                <!-- 注脚 -->
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary">阅读公告</a>
-                </div>
-            </div>
+            {% endfor %***REMOVED***
         </div>
     </div>
-        </div>
+</div>
 
-    </div>
+</div>
 </div>
 {% endblock content %***REMOVED***
