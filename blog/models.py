@@ -27,8 +27,8 @@ class Article(models.Model):
     # 所以文章在作者注销账号后，依然会存在于数据库
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name='文章作者')
-    title = models.CharField(max_length=100, verbose_name='标题')
-    body = models.TextField('正文')
+    title = models.CharField(max_length=100,db_index=True, verbose_name='标题')
+    body = models.TextField(verbose_name='正文')
     codehilite_style = models.CharField(max_length=25, verbose_name='代码高亮主题',default='solarized-light')
     created = models.DateTimeField(default=timezone.now, verbose_name='创建时间')
 

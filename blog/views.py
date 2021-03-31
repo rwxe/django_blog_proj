@@ -6,6 +6,7 @@ from django.db.utils import DataError
 from django.urls import reverse
 from django.contrib.auth import hashers
 from django.core import mail
+from django.db.models import Q
 from . import models
 import random
 import string
@@ -60,9 +61,18 @@ def hint_and_redirect(request, the_url, hint, show_hint=True, delay_time=1000):
 
 
 def index(request):
-    articles = models.Article.objects.order_by('-id')
-    context = {'articles': articles***REMOVED***
-#   return HttpResponse("主页测试")
+    if 'search_text' in request.GET and request.GET.get('search_text').split()!=[]:
+        search_text=request.GET.get('search_text')
+        articles=models.Article.objects.filter(Q(title__icontains=search_text)|Q(body__icontains=search_text))
+        context = {'articles': articles,
+                'searched':'yes'
+            ***REMOVED***
+    else:
+        articles = models.Article.objects.order_by('-id')
+        context = {'articles': articles,
+                'searched':'no'
+            ***REMOVED***
+
     return render(request, 'blog/index.html', context)
 
 
