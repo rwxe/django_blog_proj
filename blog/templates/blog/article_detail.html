@@ -14,7 +14,7 @@
         <!-- 展示文章的title -->
         <h1 class="col-12 mt-4 mb-4">{{ article.title ***REMOVED******REMOVED***</h1>
         <!-- 展示文章的author -->
-        <div class="alert alert-success">作者：{{ article.author ***REMOVED******REMOVED*** </div>
+        <div class="alert alert-success">作者：<a href="{% url 'blog:profile' article.author  %***REMOVED***" class="alert-link">{{ article.author ***REMOVED******REMOVED***</a></div>
         <!-- 展示文章author的signature -->
         <div class="alert alert-light">{{ article.author.signature ***REMOVED******REMOVED***</div>
         <div class="col-12"></div>

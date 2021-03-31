@@ -12,25 +12,44 @@
 <!-- 定义放置文章标题的div容器 -->
 
 <div class="container-fluid">
-<div class="col-12 mb-4">
-            <!-- 卡片容器 -->
-            <div class="card h-100 text-light bg-dark">
-                <!-- 标题 -->
-                <h4 class="card-header">您的资料</h4>
-                <!-- 摘要 -->
-                <div class="card-body">
-                    <p class="card-text">用户名: {{user.username***REMOVED******REMOVED***</p>
-                    <p class="card-text">邮箱: {{user.email***REMOVED******REMOVED***</p>
-                    <p class="card-text">个性签名: {{user.signature***REMOVED******REMOVED***</p>
-                    <p class="card-text">账户状态: {{user.status***REMOVED******REMOVED***</p>
-                </div>
-                <!-- 注脚 -->
-                <div class="card-footer">
-                    <a href="{%  url 'blog:edit_profile'  %***REMOVED***" class="btn btn-light">修改资料</a>
-                </div>
+    <div class="col-12 mb-4">
+        <!-- 卡片容器 -->
+        {% if is_self == "yes"  %***REMOVED***
+        <div class="card h-100 text-light bg-dark">
+            <!-- 标题 -->
+            <h4 class="card-header">您的资料</h4>
+            <!-- 摘要 -->
+            <div class="card-body">
+                <p class="card-text">用户名: {{user.username***REMOVED******REMOVED***</p>
+                <p class="card-text">邮箱: {{user.email***REMOVED******REMOVED***</p>
+                <p class="card-text">个性签名: {{user.signature***REMOVED******REMOVED***</p>
+                <p class="card-text">账户状态: {{user.status***REMOVED******REMOVED***</p>
+            </div>
+            <!-- 注脚 -->
+            <div class="card-footer">
+                <a href="{%  url 'blog:edit_profile'  %***REMOVED***" class="btn btn-light">修改资料</a>
             </div>
         </div>
+        {% else  %***REMOVED***
+        <div class="card h-100 text-light bg-dark">
+            <!-- 标题 -->
+            <h4 class="card-header">{{user.username***REMOVED******REMOVED***的资料</h4>
+            <!-- 摘要 -->
+            <div class="card-body">
+                <p class="card-text">用户名: {{user.username***REMOVED******REMOVED***</p>
+                <p class="card-text">个性签名: {{user.signature***REMOVED******REMOVED***</p>
+                <p class="card-text">账户状态: {{user.status***REMOVED******REMOVED***</p>
+            </div>
+        </div>
+        {% endif  %***REMOVED***
+    </div>
+
+    {% if is_self == "yes"  %***REMOVED***
     <h3 class="col-12">您的文章</h3>
+    {% else  %***REMOVED***
+    <h3 class="col-12">{{user.username***REMOVED******REMOVED***的文章</h3>
+    {% endif  %***REMOVED***
+
     <div class="row mt-2">
         <div class="col-12">
             {% for article in articles %***REMOVED***
@@ -53,7 +72,7 @@
 
             {% endfor %***REMOVED***
         </div>
-        
+
     </div>
 </div>
 

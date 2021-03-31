@@ -19,6 +19,7 @@ from django.conf import settings
 
 
 def hello_world(request):
+    print(request.session.get('id'))
     return hint_and_redirect(request, reverse('blog:index'), "测试hint_and_redirect,延时10s", True, 10000)
 
 
@@ -89,18 +90,28 @@ def article_detail(request, id):
     return render(request, 'blog/article_detail.html', context)
 
 
-@check_logged_in
-def profile(request):
-    articles = models.Article.objects.filter(
-        author_id=request.session.get('id'))
-    user = models.User.objects.get(id=request.session.get('id'))
-    # 为了方便，将状态值的人类可读名称直接赋值给status，方便前台调用
+def profile(request,username):
+    user = get_object_or_404(models.User,username=username)
     user.status = models.User.StatusList(user.status).label
-    context = {'articles': articles,
-               'user': user,
-           ***REMOVED***
-#   return HttpResponse("主页测试")
-    return render(request, 'blog/profile.html', context)
+    articles = models.Article.objects.filter(
+        author__username=username)
+
+    # 本人登录后浏览个人主页
+    if request.session.get('id')==user.id:
+    # 为了方便，将状态值的人类可读名称直接赋值给status，方便前台调用
+        context = {'articles': articles,
+                   'user': user,
+                   'is_self':'yes',
+               ***REMOVED***
+        return render(request, 'blog/profile.html', context)
+    else:
+        context = {'articles': articles,
+                   'user': user,
+                   'is_self':'no',
+               ***REMOVED***
+        return render(request, 'blog/profile.html', context)
+
+
 
 
 @check_logged_in
@@ -154,7 +165,7 @@ def edit_profile(request):
 #                  ***REMOVED***
 #           return render(request, 'blog/hint.html', context)
             request.session['username'] = user.username
-            return hint_and_redirect(request, reverse('blog:profile'), '修改个人资料成功', False)
+            return hint_and_redirect(request, reverse('blog:profile', args=[request.session.get('username')] ), '修改个人资料成功', False)
         except DataError:
             context = {'err_msg': '数据错误，请检查您输入的内容是否符合格式',
                    ***REMOVED***
@@ -341,7 +352,7 @@ def reset_password(request):
                #           'page': '主页',
                #       ***REMOVED***
                # return render(request, 'blog/hint.html', context)
-                return hint_and_redirect(request, reverse('blog:profile'), '修改密码成功了，正在返回个人中心')
+                return hint_and_redirect(request, reverse('blog:profile',args=[request.session.get('username')]), '修改密码成功了，正在返回个人中心')
 
             except DataError:
                 context = {'err_msg': '数据错误，请检查您输入的内容是否符合格式',
