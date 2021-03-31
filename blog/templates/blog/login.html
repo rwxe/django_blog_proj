@@ -6,14 +6,18 @@
 {% csrf_token %***REMOVED***
       <h1 class="h1 mb-3 font-weight-normal">登录</h1>
       <h6 class="h6 mb-3 font-weight-normal">未有账号? 点击<a href="{%  url 'blog:register'  %***REMOVED***">这里</a>注册</h6>
-      <input type="text" name="username" class="form-control" placeholder="用户名" required >
+      <input type="email" name="email" class="form-control" placeholder="邮箱" required >
       <input type="password" name="password1" class="form-control" placeholder="密码" required>
       <button class="btn btn-lg btn-dark btn-block" type="submit">登录</button>
 </form>
+      <p class="mt-3 h9 font-weight-normal">忘记密码? 点击<a href="{%  url 'blog:reset_password'  %***REMOVED***">这里</a>重置</p>
 {%  if err_msg  %***REMOVED***
-<div class="alert alert-danger" role="alert">
-    {{err_msg***REMOVED******REMOVED***
-</div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{err_msg***REMOVED******REMOVED***
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
 {%  endif  %***REMOVED***
 </div>
 {% endblock content %***REMOVED***

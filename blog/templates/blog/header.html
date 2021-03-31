@@ -7,14 +7,14 @@
   </button>
   <div class="collapse navbar-collapse" id="collapsibleNavbar">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item "> <a class="nav-link" href="{% url 'blog:index'  %***REMOVED***">主页 </a> </li>
+      <li class="nav-item "> <a class="nav-link" href="{% url 'blog:hello_world'  %***REMOVED***">快速测试</a> </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2 bg-dark" type="text" placeholder="关键字" aria-label="Search">
       <button class="btn btn-outline-light my-2 my-sm-0" type="submit"> 搜 索 </button>
     </form>
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item"> <a class="nav-link" href="{%  url 'blog:create_article'  %***REMOVED***">写文章</a> </li>
+        <li class="nav-item active"> <a class="nav-link" href="{%  url 'blog:create_article'  %***REMOVED***" >写文章</a> </li>
         {%  if request.session.username  %***REMOVED***
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{request.session.username***REMOVED******REMOVED***</a>

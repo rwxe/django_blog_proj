@@ -15,4 +15,6 @@ urlpatterns = [
         path('update_article/<int:id>',views.update_article,name='update_article'),
         path('delete_article/<int:id>',views.delete_article,name='delete_article'),
         path('profile',views.profile,name='profile'),
+        path('edit_profile',views.edit_profile,name='edit_profile'),
+        path('reset_password',views.reset_password,name='reset_password'),
         ]
