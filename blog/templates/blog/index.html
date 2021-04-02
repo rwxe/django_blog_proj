@@ -21,6 +21,7 @@
     {% endif  %***REMOVED***
     <div class="row mt-2">
         <div class="col-12">
+            {% if articles  %***REMOVED***
 
             {% for article in articles %***REMOVED***
             <!-- 文章内容 -->
@@ -41,6 +42,10 @@
             </div>
 
             {% endfor %***REMOVED***
+            {% else  %***REMOVED***
+            <h6 class="col-12 text-secondary">无</h6>
+
+            {% endif  %***REMOVED***
         </div>
     </div>
 </div>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404, get_list_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils import timezone
 from django.db.utils import DataError
 from django.urls import reverse
@@ -14,13 +14,14 @@ import datetime
 import markdown
 import random
 from django.conf import settings
+import asyncio
 
 # Create your views here.
 
 
-def hello_world(request):
-    print(request.session.get('id'))
-    return hint_and_redirect(request, reverse('blog:index'), "测试hint_and_redirect,延时10s", True, 10000)
+async def hello_world(request):
+    await asyncio.sleep(10)
+    return HttpResponse('Hello, async world!')
 
 
 def check_logged_in(func):
@@ -64,12 +65,13 @@ def hint_and_redirect(request, the_url, hint, show_hint=True, delay_time=1000):
 def index(request):
     if 'search_text' in request.GET and request.GET.get('search_text').split()!=[]:
         search_text=request.GET.get('search_text')
-        articles=models.Article.objects.filter(Q(title__icontains=search_text)|Q(body__icontains=search_text))
+        articles=models.Article.objects.filter(Q(title__icontains=search_text)|Q(body__icontains=search_text)).filter(visible=True)
         context = {'articles': articles,
                 'searched':'yes'
             ***REMOVED***
     else:
-        articles = models.Article.objects.order_by('-id')
+        articles = models.Article.objects.order_by('-id').filter(visible=True)
+        print(articles)
         context = {'articles': articles,
                 'searched':'no'
             ***REMOVED***
@@ -78,7 +80,10 @@ def index(request):
 
 
 def article_detail(request, id):
-    article = models.Article.objects.get(id=id)
+
+    article = get_object_or_404(models.Article,id=id)
+    if article.visible == False and 'username' not in request.session:
+        raise Http404()
     article.body = markdown.markdown(article.body,
                                      extensions=[
                                          # 包含 缩写、表格等常用扩展

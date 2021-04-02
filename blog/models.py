@@ -34,6 +34,8 @@ class Article(models.Model):
 
     # 文章更新时间。参数 auto_now=True 指定每次数据更新时自动写入当前时间
     updated = models.DateTimeField(auto_now=True,verbose_name='更新时间')
+    visible =models.BooleanField(verbose_name='可见',default=True)
+    censored =models.BooleanField(verbose_name='已审核',default=True)
 
     def __str__(self):
         return self.title

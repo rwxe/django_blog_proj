@@ -56,9 +56,19 @@
             <!-- 文章内容 -->
             <div class="col-12 mb-4">
                 <!-- 卡片容器 -->
-                <div class="card h-100">
+                {% if article.censored == False  %***REMOVED***
+                <div class="card h-100 text-white bg-secondary">
+                    <h4 class="card-header">{{ article.title ***REMOVED******REMOVED***<span class="text-dark">(待AI审核)</span></h4>
+                {% elif article.visible == False  %***REMOVED***
+                <div class="card h-100 text-white bg-danger">
+                    <h4 class="card-header">{{ article.title ***REMOVED******REMOVED***<span class="text-dark">(AI审核不通过)</span></h4>
+                {% elif article.visible == True  %***REMOVED***
+                <div class="card h-100 text-white bg-success">
+                    <h4 class="card-header">{{ article.title ***REMOVED******REMOVED***<span class="text-dark">(AI审核通过)</span></h4>
+                {% endif  %***REMOVED***
+
+
                     <!-- 标题 -->
-                    <h4 class="card-header">{{ article.title ***REMOVED******REMOVED***</h4>
                     <!-- 摘要 -->
                     <div class="card-body">
                         <p class="card-text">{{article.author.username***REMOVED******REMOVED***: {{ article.body|slice:'100' ***REMOVED******REMOVED***...</p>
