@@ -44,5 +44,61 @@
             <p>{{ article.body |safe***REMOVED******REMOVED***</p>
         </div>
     </div>
+    <!--评论版-->
+    {% if request.session.id %***REMOVED***
+    <div>
+        <br/>
+        <form action="{% url 'blog:post_comment' article.id %***REMOVED***" method="POST" >
+            {% csrf_token %***REMOVED***
+            <div class="form-group">
+                <label for="body">
+                    <strong>
+                        评论
+                    </strong>
+                </label>
+                <textarea 
+                       type="text" 
+                       class="form-control" 
+                       name="body" 
+                       rows="2"></textarea>
+            </div>
+            <!-- 提交按钮 -->
+            <button type="submit" class="btn btn-primary ">发送</button>                    
+        </form>
+    </div>
+    <br>
+    {% else %***REMOVED***
+    <br>
+    <h5 class="row justify-content-center">
+        请<a href="{% url 'blog:login' %***REMOVED***">登录</a>后回复
+    </h5>
+    <br>
+    {% endif %***REMOVED***
+    <div>
+        {% for comment in comments %***REMOVED***
+        <br>
+        {% if comment.user == article.author  %***REMOVED***
+        <div class="alert alert-success">
+            <a href="{% url 'blog:profile' comment.user  %***REMOVED***" class="alert-link">{{ comment.user ***REMOVED******REMOVED*** &nbsp
+            </a>
+                <span style="">
+                    {{ comment.created|date:"Y/m/d H:i:s" ***REMOVED******REMOVED***
+                </span>
+        </div>
+        {% else  %***REMOVED***
+        <div class="alert alert-info">
+            <a href="{% url 'blog:profile' comment.user  %***REMOVED***" class="alert-link">{{ comment.user ***REMOVED******REMOVED*** &nbsp
+            </a>
+                <span style="">
+                    {{ comment.created|date:"Y/m/d H:i:s" ***REMOVED******REMOVED***
+                </span>
+        </div>
+        {% endif  %***REMOVED***
+        <div class="col-12 bg-light">
+            <p>{{ comment.body |safe***REMOVED******REMOVED***</p>
+        </div>
+            {% endfor %***REMOVED***
+    </div>
 </div>
+
 {% endblock content %***REMOVED***

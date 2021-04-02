@@ -40,3 +40,12 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+class Comment(models.Model):
+    # ID自动创建
+    article=models.ForeignKey(Article,on_delete=models.CASCADE,verbose_name='评论的文章')
+    user=models.ForeignKey(User,on_delete=models.CASCADE,verbose_name='评论用户')
+    body=models.TextField(max_length=3000,verbose_name='评论内容')
+    created = models.DateTimeField(default=timezone.now, verbose_name='创建时间')
+
+    def __str__(self):
+        return self.user.username+':'+self.body[:20]

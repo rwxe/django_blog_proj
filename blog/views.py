@@ -19,9 +19,8 @@ import asyncio
 # Create your views here.
 
 
-async def hello_world(request):
-    await asyncio.sleep(10)
-    return HttpResponse('Hello, async world!')
+def guide_bulletin(request):
+    return article_detail(request,15)
 
 
 def check_logged_in(func):
@@ -63,25 +62,37 @@ def hint_and_redirect(request, the_url, hint, show_hint=True, delay_time=1000):
 
 
 def index(request):
-    if 'search_text' in request.GET and request.GET.get('search_text').split()!=[]:
-        search_text=request.GET.get('search_text')
-        articles=models.Article.objects.filter(Q(title__icontains=search_text)|Q(body__icontains=search_text)).filter(visible=True)
+    if 'search_text' in request.GET and request.GET.get('search_text').split() != []:
+        search_text = request.GET.get('search_text')
+        articles = models.Article.objects.filter(Q(title__icontains=search_text) | Q(
+            body__icontains=search_text)).filter(visible=True)
+
         context = {'articles': articles,
-                'searched':'yes'
-            ***REMOVED***
+                   'searched': 'yes'
+               ***REMOVED***
     else:
         articles = models.Article.objects.order_by('-id').filter(visible=True)
         print(articles)
         context = {'articles': articles,
-                'searched':'no'
-            ***REMOVED***
+                   'searched': 'no'
+               ***REMOVED***
+    # 截取文章开头一部分作为预览
+    for a in context['articles']:
+        a.body = a.body[:200]
+        if len(a.body) == 100:
+            a.body += '...'
 
     return render(request, 'blog/index.html', context)
 
 
-def article_detail(request, id):
+def article_detail(request, article_id):
 
-    article = get_object_or_404(models.Article,id=id)
+    article = get_object_or_404(models.Article, id=article_id)
+    try:
+        comments= models.Comment.objects.filter(article=article)
+        print("DEBUG",comments)
+    except models.Comment.DoesNotExist:
+        comments=None
     if article.visible == False and 'username' not in request.session:
         raise Http404()
     article.body = markdown.markdown(article.body,
@@ -91,32 +102,70 @@ def article_detail(request, id):
                                          # 语法高亮扩展
                                          'markdown.extensions.codehilite',
                                      ])
-    context = {'article': article***REMOVED***
+    if comments != None:
+        for c in comments:
+            print("DEBUG",c)
+            print("DEBUG",c.body)
+            c.body = markdown.markdown(c.body,
+                                             extensions=[
+                                                 # 包含 缩写、表格等常用扩展
+                                                 'markdown.extensions.extra',
+                                                 # 语法高亮扩展
+                                                 'markdown.extensions.codehilite',
+                                             ])
+            print("DEBUG",c.body)
+    print(comments)
+
+    context = {'article': article,
+            'comments':comments***REMOVED***
     return render(request, 'blog/article_detail.html', context)
 
 
-def profile(request,username):
-    user = get_object_or_404(models.User,username=username)
+@check_logged_in
+def post_comment(request, article_id):
+
+    if request.method == 'POST':
+        article = get_object_or_404(models.Article, id=article_id)
+        user = get_object_or_404(models.User, id=request.session.get('id'))
+        body = request.POST.get('body')
+
+        new_comment = models.Comment()
+        new_comment.article = article
+        new_comment.user = user
+        new_comment.body = body
+        try:
+            new_comment.save()
+            return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '评论成功',False)
+        except DataError:
+            return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '数据错误，请检查内容重新发送')
+        except:
+            return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '未知错误')
+
+    # 处理错误请求
+    else:
+        return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '评论只支持POST形式发送')
+
+
+def profile(request, username):
+    user = get_object_or_404(models.User, username=username)
     user.status = models.User.StatusList(user.status).label
     articles = models.Article.objects.filter(
         author__username=username)
 
     # 本人登录后浏览个人主页
-    if request.session.get('id')==user.id:
-    # 为了方便，将状态值的人类可读名称直接赋值给status，方便前台调用
+    if request.session.get('id') == user.id:
+        # 为了方便，将状态值的人类可读名称直接赋值给status，方便前台调用
         context = {'articles': articles,
                    'user': user,
-                   'is_self':'yes',
+                   'is_self': 'yes',
                ***REMOVED***
         return render(request, 'blog/profile.html', context)
     else:
         context = {'articles': articles,
                    'user': user,
-                   'is_self':'no',
+                   'is_self': 'no',
                ***REMOVED***
         return render(request, 'blog/profile.html', context)
-
-
 
 
 @check_logged_in
@@ -170,7 +219,7 @@ def edit_profile(request):
 #                  ***REMOVED***
 #           return render(request, 'blog/hint.html', context)
             request.session['username'] = user.username
-            return hint_and_redirect(request, reverse('blog:profile', args=[request.session.get('username')] ), '修改个人资料成功', False)
+            return hint_and_redirect(request, reverse('blog:profile', args=[request.session.get('username')]), '修改个人资料成功', False)
         except DataError:
             context = {'err_msg': '数据错误，请检查您输入的内容是否符合格式',
                    ***REMOVED***
@@ -191,7 +240,6 @@ def create_article(request):
         return render(request, 'blog/create_article.html')
     if request.method == 'POST':
         new_article = models.Article()
-        # 临时设置成id 1
         new_article.author = models.User.objects.get(id=request.session['id'])
         new_article.codehilite_style = request.POST.get('codehilite_style')
         title = request.POST.get('title')
@@ -217,8 +265,8 @@ def create_article(request):
 
 
 @check_logged_in
-def update_article(request, id):
-    article = models.Article.objects.get(id=id)
+def update_article(request, article_id):
+    article = models.Article.objects.get(id=article_id)
     if article.author != models.User.objects.get(id=request.session['id']):
         # 理论上，前端早已禁止这种情况发生
        # context = {'the_url': reverse('blog:index'),
@@ -252,12 +300,12 @@ def update_article(request, id):
            #           'page': '主页',
            #       ***REMOVED***
            # return render(request, 'blog/hint.html', context)
-            return hint_and_redirect(request, reverse('blog:article_detail', args=[id]), '文章修改成功', False)
+            return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '文章修改成功', False)
 
 
 @check_logged_in
-def delete_article(request, id):
-    article = models.Article.objects.get(id=id)
+def delete_article(request, article_id):
+    article = models.Article.objects.get(id=article_id)
     if article.author != models.User.objects.get(id=request.session['id']):
         # 理论上，前端早已禁止这种情况发生
        # context = {'the_url': reverse('blog:index'),
@@ -268,8 +316,8 @@ def delete_article(request, id):
         return hint_and_redirect(request, reverse('blog:index'), '你不是这篇文章的作者')
 
     if request.method == 'GET':
-        context = {'article': article***REMOVED***
-        return render(request, 'blog/delete_article.html')
+        context = {'question': '确认删除吗？'***REMOVED***
+        return render(request, 'blog/confirm.html', context)
     if request.method == 'POST':
         if request.POST.get('confirm') == 'yes':
             article.delete()
@@ -286,7 +334,7 @@ def delete_article(request, id):
            #           'page': '主页',
            #       ***REMOVED***
            # return render(request, 'blog/hint.html', context)
-            return hint_and_redirect(request, reverse('blog:article_detail', args=[id]), '文章删除放弃')
+            return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '文章删除放弃')
 
 
 def reset_password(request):
@@ -357,7 +405,7 @@ def reset_password(request):
                #           'page': '主页',
                #       ***REMOVED***
                # return render(request, 'blog/hint.html', context)
-                return hint_and_redirect(request, reverse('blog:profile',args=[request.session.get('username')]), '修改密码成功了，正在返回个人中心')
+                return hint_and_redirect(request, reverse('blog:profile', args=[request.session.get('username')]), '修改密码成功了，正在返回个人中心')
 
             except DataError:
                 context = {'err_msg': '数据错误，请检查您输入的内容是否符合格式',
