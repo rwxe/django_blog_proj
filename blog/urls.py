@@ -12,6 +12,7 @@ urlpatterns = [
         path('logout',views.logout,name='logout'),
         path('article_detail/<int:article_id>',views.article_detail,name='article_detail'),
         path('post_comment/<int:article_id>',views.post_comment,name='post_comment'),
+        path('delete_comment/<int:comment_id>',views.delete_comment,name='delete_comment'),
         path('create_article',views.create_article,name='create_article'),
         path('update_article/<int:id>',views.update_article,name='update_article'),
         path('delete_article/<int:id>',views.delete_article,name='delete_article'),

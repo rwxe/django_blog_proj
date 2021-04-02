@@ -77,27 +77,36 @@
     <div>
         {% for comment in comments %***REMOVED***
         <br>
-        {% if comment.user == article.author  %***REMOVED***
-        <div class="alert alert-success">
-            <a href="{% url 'blog:profile' comment.user  %***REMOVED***" class="alert-link">{{ comment.user ***REMOVED******REMOVED*** &nbsp
-            </a>
+
+            {% if comment.user == article.author  %***REMOVED***
+            <div class="alert alert-success">
+                <a href="{% url 'blog:profile' comment.user  %***REMOVED***" class="alert-link">{{ comment.user ***REMOVED******REMOVED***&nbsp
+                </a>
                 <span style="">
                     {{ comment.created|date:"Y/m/d H:i:s" ***REMOVED******REMOVED***
                 </span>
-        </div>
-        {% else  %***REMOVED***
-        <div class="alert alert-info">
-            <a href="{% url 'blog:profile' comment.user  %***REMOVED***" class="alert-link">{{ comment.user ***REMOVED******REMOVED*** &nbsp
-            </a>
+                {% if comment.user.id == request.session.id  %***REMOVED***
+                <a href="{% url 'blog:delete_comment' comment.id %***REMOVED***?delete_comment=yes" class="alert-link">&nbsp&nbsp删除
+                {% endif  %***REMOVED***
+                </a>
+            </div>
+            {% else  %***REMOVED***
+            <div class="alert alert-info">
+                <a href="{% url 'blog:profile' comment.user  %***REMOVED***" class="alert-link">{{ comment.user ***REMOVED******REMOVED***&nbsp
+                </a>
                 <span style="">
                     {{ comment.created|date:"Y/m/d H:i:s" ***REMOVED******REMOVED***
                 </span>
-        </div>
-        {% endif  %***REMOVED***
+                {% if comment.user.id == request.session.id  %***REMOVED***
+                <a href="{% url 'blog:delete_comment' comment.id %***REMOVED***?delete_comment=yes" class="alert-link">&nbsp&nbsp删除
+                {% endif  %***REMOVED***
+                </a>
+            </div>
+            {% endif  %***REMOVED***
         <div class="col-12 bg-light">
             <p>{{ comment.body |safe***REMOVED******REMOVED***</p>
         </div>
-            {% endfor %***REMOVED***
+        {% endfor %***REMOVED***
     </div>
 </div>
 

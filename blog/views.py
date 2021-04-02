@@ -104,8 +104,6 @@ def article_detail(request, article_id):
                                      ])
     if comments != None:
         for c in comments:
-            print("DEBUG",c)
-            print("DEBUG",c.body)
             c.body = markdown.markdown(c.body,
                                              extensions=[
                                                  # 包含 缩写、表格等常用扩展
@@ -113,8 +111,6 @@ def article_detail(request, article_id):
                                                  # 语法高亮扩展
                                                  'markdown.extensions.codehilite',
                                              ])
-            print("DEBUG",c.body)
-    print(comments)
 
     context = {'article': article,
             'comments':comments***REMOVED***
@@ -128,11 +124,14 @@ def post_comment(request, article_id):
         article = get_object_or_404(models.Article, id=article_id)
         user = get_object_or_404(models.User, id=request.session.get('id'))
         body = request.POST.get('body')
+        if body.split() == []:
+            return hint_and_redirect(request, reverse('blog:article_detail',args=[article_id]), '评论不能为空')
 
         new_comment = models.Comment()
         new_comment.article = article
         new_comment.user = user
         new_comment.body = body
+
         try:
             new_comment.save()
             return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '评论成功',False)
@@ -144,6 +143,25 @@ def post_comment(request, article_id):
     # 处理错误请求
     else:
         return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '评论只支持POST形式发送')
+
+
+@check_logged_in
+def delete_comment(request,comment_id):
+    # 之所以用GET方法，完全是因为在前端方便写
+    if request.method == 'GET':
+        print('收到了get方法')
+        print(request.GET.get('delete_comment'))
+        if request.GET.get('delete_comment') == 'yes':
+            print('DEBUG')
+            comment=get_object_or_404(models.Comment,id=comment_id)
+            article_id=comment.article.id
+            if request.session.get('id') == comment.user.id:
+                print("DEBUG session id 和 comment user id 一样")
+                comment.delete()
+                return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '删除评论成功')
+            else:
+                return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '您不是评论用户本人，删除评论失败')
+
 
 
 def profile(request, username):
