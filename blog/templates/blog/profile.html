@@ -1,86 +1,86 @@
 <!DOCTYPE html>
 <!-- extends表明此页面继承自 base.html 文件 -->
-{% extends "blog/base.html" %***REMOVED***
-{% load static %***REMOVED***
+{% extends "blog/base.html" %}
+{% load static %}
 
 <!-- 写入 base.html 中定义的 title -->
-{% block title %***REMOVED***首页:文章列表{% endblock title %***REMOVED***
+{% block title %}首页:文章列表{% endblock title %}
 
 <!-- 写入 base.html 中定义的 content -->
-{% block content %***REMOVED***
+{% block content %}
 
 <!-- 定义放置文章标题的div容器 -->
 
 <div class="container-fluid">
     <div class="col-12 mb-4">
         <!-- 卡片容器 -->
-        {% if is_self == "yes"  %***REMOVED***
+        {% if is_self == "yes"  %}
         <div class="card h-100 text-light bg-dark">
             <!-- 标题 -->
             <h4 class="card-header">您的资料</h4>
             <!-- 摘要 -->
             <div class="card-body">
-                <p class="card-text">用户名: {{user.username***REMOVED******REMOVED***</p>
-                <p class="card-text">邮箱: {{user.email***REMOVED******REMOVED***</p>
-                <p class="card-text">个性签名: {{user.signature***REMOVED******REMOVED***</p>
-                <p class="card-text">账户状态: {{user.status***REMOVED******REMOVED***</p>
+                <p class="card-text">用户名: {{user.username}}</p>
+                <p class="card-text">邮箱: {{user.email}}</p>
+                <p class="card-text">个性签名: {{user.signature}}</p>
+                <p class="card-text">账户状态: {{user.status}}</p>
             </div>
             <!-- 注脚 -->
             <div class="card-footer">
-                <a href="{%  url 'blog:edit_profile'  %***REMOVED***" class="btn btn-light">修改资料</a>
+                <a href="{%  url 'blog:edit_profile'  %}" class="btn btn-light">修改资料</a>
             </div>
         </div>
-        {% else  %***REMOVED***
+        {% else  %}
         <div class="card h-100 text-light bg-dark">
             <!-- 标题 -->
-            <h4 class="card-header">{{user.username***REMOVED******REMOVED***的资料</h4>
+            <h4 class="card-header">{{user.username}}的资料</h4>
             <!-- 摘要 -->
             <div class="card-body">
-                <p class="card-text">用户名: {{user.username***REMOVED******REMOVED***</p>
-                <p class="card-text">个性签名: {{user.signature***REMOVED******REMOVED***</p>
-                <p class="card-text">账户状态: {{user.status***REMOVED******REMOVED***</p>
+                <p class="card-text">用户名: {{user.username}}</p>
+                <p class="card-text">个性签名: {{user.signature}}</p>
+                <p class="card-text">账户状态: {{user.status}}</p>
             </div>
         </div>
-        {% endif  %***REMOVED***
+        {% endif  %}
     </div>
 
-    {% if is_self == "yes"  %***REMOVED***
+    {% if is_self == "yes"  %}
     <h3 class="col-12">您的文章</h3>
-    {% else  %***REMOVED***
-    <h3 class="col-12">{{user.username***REMOVED******REMOVED***的文章</h3>
-    {% endif  %***REMOVED***
+    {% else  %}
+    <h3 class="col-12">{{user.username}}的文章</h3>
+    {% endif  %}
 
     <div class="row mt-2">
         <div class="col-12">
-            {% for article in articles %***REMOVED***
+            {% for article in articles %}
             <!-- 文章内容 -->
             <div class="col-12 mb-4">
                 <!-- 卡片容器 -->
-                {% if article.censored == False  %***REMOVED***
+                {% if article.censored == False  %}
                 <div class="card h-100 text-white bg-secondary">
-                    <h4 class="card-header">{{ article.title ***REMOVED******REMOVED***<span class="text-dark">(待AI审核)</span></h4>
-                {% elif article.visible == False  %***REMOVED***
+                    <h4 class="card-header">{{ article.title }}<span class="text-dark">(待AI审核)</span></h4>
+                {% elif article.visible == False  %}
                 <div class="card h-100 text-white bg-danger">
-                    <h4 class="card-header">{{ article.title ***REMOVED******REMOVED***<span class="text-dark">(AI审核不通过)</span></h4>
-                {% elif article.visible == True  %***REMOVED***
+                    <h4 class="card-header">{{ article.title }}<span class="text-dark">(AI审核不通过)</span></h4>
+                {% elif article.visible == True  %}
                 <div class="card h-100 text-white bg-success">
-                    <h4 class="card-header">{{ article.title ***REMOVED******REMOVED***<span class="text-dark">(AI审核通过)</span></h4>
-                {% endif  %***REMOVED***
+                    <h4 class="card-header">{{ article.title }}<span class="text-dark">(AI审核通过)</span></h4>
+                {% endif  %}
 
 
                     <!-- 标题 -->
                     <!-- 摘要 -->
                     <div class="card-body">
-                        <p class="card-text">{{article.author.username***REMOVED******REMOVED***: {{ article.body|slice:'100' ***REMOVED******REMOVED***...</p>
+                        <p class="card-text">{{article.author.username}}: {{ article.body|slice:'100' }}...</p>
                     </div>
                     <!-- 注脚 -->
                     <div class="card-footer">
-                        <a href="{% url 'blog:article_detail' article.id %***REMOVED***" class="btn btn-primary">阅读本文</a>
+                        <a href="{% url 'blog:article_detail' article.id %}" class="btn btn-primary">阅读本文</a>
                     </div>
                 </div>
             </div>
 
-            {% endfor %***REMOVED***
+            {% endfor %}
         </div>
 
     </div>
@@ -88,4 +88,4 @@
 
 </div>
 </div>
-{% endblock content %***REMOVED***
+{% endblock content %}

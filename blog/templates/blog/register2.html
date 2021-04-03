@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
     <title>用户注册</title>
-    {% load static %***REMOVED***
-    <link rel='stylesheet' type='text/css' href="{% static 'blog/style.css' %***REMOVED***"> 
+    {% load static %}
+    <link rel='stylesheet' type='text/css' href="{% static 'blog/style.css' %}"> 
 </head>
 <body>
-    <a class='homepage' href='{%  url 'blog:index'  %***REMOVED***'>首页</a>
-<form action="{% url 'blog:register' %***REMOVED***" method='POST'>
-{% csrf_token %***REMOVED***
+    <a class='homepage' href='{%  url 'blog:index'  %}'>首页</a>
+<form action="{% url 'blog:register' %}" method='POST'>
+{% csrf_token %}
         <p>用户名<input type='text' name='username' value='' /></p>
         <p>邮箱<input type='text' name='email' value='' /></p>
         <p>密码<input type='password' name='password1' value='' /></p>
         <p>重复密码<input type='password' name='password2' value='' /></p>
-        <p style="color:red">{{err_msg***REMOVED******REMOVED***</p>
+        <p style="color:red">{{err_msg}}</p>
         <input type='submit' value='注册' />
     </form>
 </body>

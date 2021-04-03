@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <!-- extends表明此页面继承自 base.html 文件 -->
-{% extends "blog/base.html" %***REMOVED***
-{% load static %***REMOVED***
+{% extends "blog/base.html" %}
+{% load static %}
 <!-- 写入 base.html 中定义的 title -->
-{% block title %***REMOVED*** {{ question ***REMOVED******REMOVED*** {% endblock title %***REMOVED***
+{% block title %} {{ question }} {% endblock title %}
 <!-- 写入 base.html 中定义的 content -->
-{% block content %***REMOVED***
+{% block content %}
 <!--你可能会想，为什么不使用弹窗而是用这种方式确认，原因很简单，因为作者不会JS -->
 <div class="container col-4 text-center justify-content-center ">
 <form action="#" class="form-signin " method="POST">
-{% csrf_token %***REMOVED***
+{% csrf_token %}
   <div class="form-group form-check">
     <input type="checkbox" class="form-check-input" id="Check1" name="confirm" value="yes">
-    <label class="form-check-label" for="Check1"  >{{ question ***REMOVED******REMOVED***</label>
+    <label class="form-check-label" for="Check1"  >{{ question }}</label>
   </div>
   <button type="submit" class="btn btn-primary">提交</button>
 </form>
 </div>
-{% endblock content %***REMOVED***
+{% endblock content %}

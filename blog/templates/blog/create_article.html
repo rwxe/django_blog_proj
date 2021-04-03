@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <!-- extends表明此页面继承自 base.html 文件 -->
-{% extends "blog/base.html" %***REMOVED***
-{% load static %***REMOVED***
+{% extends "blog/base.html" %}
+{% load static %}
 <!-- 写入 base.html 中定义的 title -->
-{% block title %***REMOVED*** 写文章 {% endblock title %***REMOVED***
+{% block title %} 写文章 {% endblock title %}
 <!-- 写入 base.html 中定义的 content -->
-{% block content %***REMOVED***
+{% block content %}
 <!-- 写文章表单 -->
 <div class="container">
     <div class="row">
@@ -14,7 +14,7 @@
             <!-- 提交文章的表单 -->
             <form method="POST" action="#">
                 <!-- Django中需要POST数据的地方都必须有csrf_token -->
-                {% csrf_token %***REMOVED***
+                {% csrf_token %}
                 <!-- 文章标题 -->
                 <div class="form-group">
                     <!-- 标签 -->
@@ -44,4 +44,4 @@
         </div>
     </div>
 </div>
-{% endblock content %***REMOVED***
+{% endblock content %}

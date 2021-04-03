@@ -68,7 +68,7 @@ def check_logged_in(func):
             #           context = {'the_url': reverse('blog:index'),
             #                      'hint': '你还没登录',
             #                      'page': '主页',
-            #                  ***REMOVED***
+            #                      }
             #           return render(request, 'blog/hint.html', context)
             return hint_and_redirect(request, reverse('blog:index'), '你还没登录,正在返回主页')
         return func(*args, **kw)
@@ -97,7 +97,7 @@ def hint_and_redirect(request, the_url, hint, show_hint=True, delay_time=1000):
         context = {'the_url': the_url,
                    'hint': hint,
                    'delay_time': delay_time,
-               ***REMOVED***
+                   }
         return render(request, 'blog/hint.html', context)
 
 
@@ -110,13 +110,13 @@ def index(request):
 
         context = {'articles': articles,
                    'searched': 'yes'
-               ***REMOVED***
+                   }
     else:
         articles = models.Article.objects.order_by('-id').filter(visible=True)
         print(articles)
         context = {'articles': articles,
                    'searched': 'no'
-               ***REMOVED***
+                   }
     # 截取文章开头一部分作为预览
     for a in context['articles']:
         a.body = a.body[:200]
@@ -155,7 +155,7 @@ def article_detail(request, article_id):
                                              ])
 
     context = {'article': article,
-            'comments':comments***REMOVED***
+            'comments':comments}
     return render(request, 'blog/article_detail.html', context)
 
 
@@ -221,13 +221,13 @@ def profile(request, username):
         context = {'articles': articles,
                    'user': user,
                    'is_self': 'yes',
-               ***REMOVED***
+                   }
         return render(request, 'blog/profile.html', context)
     else:
         context = {'articles': articles,
                    'user': user,
                    'is_self': 'no',
-               ***REMOVED***
+                   }
         return render(request, 'blog/profile.html', context)
 
 
@@ -240,12 +240,12 @@ def edit_profile(request):
         #       context = {'the_url': reverse('blog:index'),
         #                  'hint': '未知错误,可能会话已过期，请尝试重新登录',
         #                  'page': '主页',
-        #              ***REMOVED***
+        #                  }
         #       return render(request, 'blog/hint.html', context)
         return hint_and_redirect(request, reverse('blog:index'), '未知错误，可能会话已过期，请尝试重新登录')
     if request.method == 'GET':
         context = {'user': user,
-               ***REMOVED***
+                   }
         return render(request, 'blog/edit_profile.html', context)
     elif request.method == 'POST':
 
@@ -265,7 +265,7 @@ def edit_profile(request):
                 models.User.objects.get(username=username)
                 context = {'err_msg': '此用户名已存在，请更换一个',
                            'user': user,
-                       ***REMOVED***
+                           }
                 return render(request, 'blog/edit_profile.html', context)
         except models.User.DoesNotExist:
             pass
@@ -280,13 +280,13 @@ def edit_profile(request):
 #           context = {'the_url': reverse('blog:profile'),
 #                      'hint': '修改个人资料成功了',
 #                      'page': '个人中心',
-#                  ***REMOVED***
+#                      }
 #           return render(request, 'blog/hint.html', context)
             request.session['username'] = user.username
             return hint_and_redirect(request, reverse('blog:profile', args=[request.session.get('username')]), '修改个人资料成功', False)
         except DataError:
             context = {'err_msg': '数据错误，请检查您输入的内容是否符合格式',
-                   ***REMOVED***
+                       }
             return render(request, 'blog/register.html', context)
         except:
             return hint_and_redirect(request, reverse('blog:edit_profile'), '未知错误')
@@ -299,7 +299,7 @@ def create_article(request):
     #       context={'the_url':reverse('blog:index'),
     #               'hint':'你还没登录',
     #               'page':'主页',
-    #           ***REMOVED***
+    #               }
     #       return render(request,'blog/hint.html',context)
     if request.method == 'GET':
         return render(request, 'blog/create_article.html')
@@ -314,7 +314,7 @@ def create_article(request):
            # context = {'the_url': reverse('blog:create_article'),
            #           'hint': '文章主体或标题不能为空',
            #           'page': '写文章界面',
-           #       ***REMOVED***
+           #           }
            # return render(request, 'blog/hint.html', context)
             return hint_and_redirect(request, reverse('blog:create_article'), '文章主体或标题不能为空')
         else:
@@ -324,7 +324,7 @@ def create_article(request):
            # context = {'the_url': reverse('blog:index'),
            #           'hint': '文章创建成功',
            #           'page': '主页',
-           #       ***REMOVED***
+           #           }
            # return render(request, 'blog/hint.html', context)
             return hint_and_redirect(request, reverse('blog:index'), '文章创建成功')
 
@@ -338,12 +338,12 @@ def update_article(request, article_id):
        # context = {'the_url': reverse('blog:index'),
        #           'hint': '你不是这篇文章的作者',
        #           'page': '主页',
-       #       ***REMOVED***
+       #           }
        # return render(request, 'blog/hint.html', context)
         return hint_and_redirect(request, reverse('blog:index'), '你不是这篇文章的作者')
 
     if request.method == 'GET':
-        context = {'article': article***REMOVED***
+        context = {'article': article}
         return render(request, 'blog/update_article.html', context)
     if request.method == 'POST':
         article.codehilite_style = request.POST.get('codehilite_style')
@@ -353,7 +353,7 @@ def update_article(request, article_id):
            # context = {'the_url': reverse('blog:update_article'),
            #           'hint': '文章主体或标题不能为空',
            #           'page': '修改文章界面',
-           #       ***REMOVED***
+           #           }
            # return render(request, 'blog/hint.html', context)
             return hint_and_redirect(request, reverse('blog:update_article'), '文章主体或标题不能为空')
 
@@ -364,7 +364,7 @@ def update_article(request, article_id):
            # context = {'the_url': reverse('blog:index'),
            #           'hint': '文章修改成功',
            #           'page': '主页',
-           #       ***REMOVED***
+           #           }
            # return render(request, 'blog/hint.html', context)
             return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '文章修改成功', False)
 
@@ -378,12 +378,12 @@ def delete_article(request, article_id):
        # context = {'the_url': reverse('blog:index'),
        #           'hint': '你不是这篇文章的作者',
        #           'page': '主页',
-       #       ***REMOVED***
+       #           }
        # return render(request, 'blog/hint.html', context)
         return hint_and_redirect(request, reverse('blog:index'), '你不是这篇文章的作者')
 
     if request.method == 'GET':
-        context = {'question': '确认删除吗？'***REMOVED***
+        context = {'question': '确认删除吗？'}
         return render(request, 'blog/confirm.html', context)
     if request.method == 'POST':
         if request.POST.get('confirm') == 'yes':
@@ -391,7 +391,7 @@ def delete_article(request, article_id):
            # context = {'the_url': reverse('blog:index'),
            #           'hint': '文章删除成功',
            #           'page': '主页',
-           #       ***REMOVED***
+           #           }
            # return render(request, 'blog/hint.html', context)
             return hint_and_redirect(request, reverse('blog:index'), '文章删除成功')
 
@@ -399,7 +399,7 @@ def delete_article(request, article_id):
            # context = {'the_url': reverse('blog:index'),
            #           'hint': '文章删除放弃',
            #           'page': '主页',
-           #       ***REMOVED***
+           #           }
            # return render(request, 'blog/hint.html', context)
             return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '文章删除放弃')
 
@@ -411,7 +411,7 @@ def reset_password(request):
         request.session['sent'] = 'no'
         context = {'err_msg': '',
                    'sent': 'no',
-               ***REMOVED***
+                   }
         return render(request, 'blog/reset_password.html', context)
     elif request.method == 'POST':
         # print("会话项目",request.session.items())
@@ -424,7 +424,7 @@ def reset_password(request):
         except models.User.DoesNotExist:
             context = {'err_msg': '此用户不存在',
                        'sent': 'no',
-                   ***REMOVED***
+                       }
             return render(request, 'blog/reset_password.html', context)
 
         p1 = request.POST.get('password1')
@@ -438,14 +438,14 @@ def reset_password(request):
                 request.session['sent'] = 'no'
                 context = {'err_msg': '验证码的发送出现了问题，这可能在短时间内无法解决，请改日再来',
                            'sent': 'no',
-                       ***REMOVED***
+                           }
                 return render(request, 'blog/reset_password.html', context)
 
             context = {'email': email,
                        'password1': p1,
                        'password2': p2,
                        'sent': 'yes'
-                   ***REMOVED***
+                       }
             request.session['sent'] = 'yes'
             return render(request, 'blog/reset_password.html', context)
         if request.session.get('sent') == 'yes':
@@ -455,12 +455,12 @@ def reset_password(request):
                            'password1': p1,
                            'password2': p2,
                            'sent': 'yes',
-                       ***REMOVED***
+                           }
                 return render(request, 'blog/reset_password.html', context)
         if request.session.get('sent') == None:
             context = {'err_msg': '验证码过期，请重新获取',
                        'sent': 'no',
-                   ***REMOVED***
+                       }
             return render(request, 'blog/reset_password.html', context)
         if request.session.get('verify_code') == request.POST.get('verify_code'):
             print("验证码对了")
@@ -470,7 +470,7 @@ def reset_password(request):
         p2 = request.POST.get('password2')
         if p1 != p2:
             context = {'err_msg': '两次输入的密码不同，请检查是否有误',
-                   ***REMOVED***
+                       }
             return render(request, 'blog/reset_password.html', context)
         else:
             p1_encrypted = hashers.make_password(p1, None, 'pbkdf2_sha256')
@@ -481,13 +481,13 @@ def reset_password(request):
                # context = {'the_url': reverse('blog:index'),
                #           'hint': '注册成功了',
                #           'page': '主页',
-               #       ***REMOVED***
+               #           }
                # return render(request, 'blog/hint.html', context)
                 return hint_and_redirect(request, reverse('blog:profile', args=[request.session.get('username')]), '修改密码成功了，正在返回个人中心')
 
             except DataError:
                 context = {'err_msg': '数据错误，请检查您输入的内容是否符合格式',
-                       ***REMOVED***
+                           }
                 return render(request, 'blog/reset_password.html', context)
             except:
                 return HttpResponse("出BUG了")
@@ -501,7 +501,7 @@ def register(request):
         request.session['sent'] = 'no'
         context = {'err_msg': '',
                    'sent': 'no',
-               ***REMOVED***
+                   }
         return render(request, 'blog/register.html', context)
     elif request.method == 'POST':
         # print("会话项目",request.session.items())
@@ -521,7 +521,7 @@ def register(request):
                 request.session['sent'] = 'no'
                 context = {'err_msg': '验证码的发送出现了问题，这可能在短时间内无法解决，请改日再来',
                            'sent': 'no',
-                       ***REMOVED***
+                           }
                 return render(request, 'blog/register.html', context)
 
             context = {'username': username,
@@ -529,7 +529,7 @@ def register(request):
                        'password1': p1,
                        'password2': p2,
                        'sent': 'yes'
-                   ***REMOVED***
+                       }
             request.session['sent'] = 'yes'
             return render(request, 'blog/register.html', context)
         if request.session.get('sent') == 'yes':
@@ -540,12 +540,12 @@ def register(request):
                            'password1': p1,
                            'password2': p2,
                            'sent': 'yes',
-                       ***REMOVED***
+                           }
                 return render(request, 'blog/register.html', context)
         if request.session.get('sent') == None:
             context = {'err_msg': '验证码过期，请重新获取',
                        'sent': 'no',
-                   ***REMOVED***
+                       }
             return render(request, 'blog/register.html', context)
 
         new_user = models.User()
@@ -560,7 +560,7 @@ def register(request):
             # 名不存在异常，则为可以存入数据库
             models.User.objects.get(username=username)
             context = {'err_msg': '此用户名已存在，请更换一个',
-                   ***REMOVED***
+                       }
             return render(request, 'blog/register.html', context)
         except models.User.DoesNotExist:
             new_user.username = username
@@ -570,14 +570,14 @@ def register(request):
             # 不存在异常，则为可以存入数据库
             models.User.objects.get(email=email)
             context = {'err_msg': '此邮箱已存在，请更换一个',
-                   ***REMOVED***
+                       }
             return render(request, 'blog/register.html', context)
         except models.User.DoesNotExist:
             new_user.email = email
 
         if p1 != p2:
             context = {'err_msg': '两次输入的密码不同，请检查是否有误',
-                   ***REMOVED***
+                       }
             return render(request, 'blog/register.html', context)
         else:
             p1_encrypted = hashers.make_password(p1, None, 'pbkdf2_sha256')
@@ -588,13 +588,13 @@ def register(request):
                # context = {'the_url': reverse('blog:index'),
                #           'hint': '注册成功了',
                #           'page': '主页',
-               #       ***REMOVED***
+               #           }
                # return render(request, 'blog/hint.html', context)
                 return hint_and_redirect(request, reverse('blog:index'), '注册成功了')
 
             except DataError:
                 context = {'err_msg': '数据错误，请检查您输入的内容是否符合格式',
-                       ***REMOVED***
+                           }
                 return render(request, 'blog/register.html', context)
             except:
                 return HttpResponse("出BUG了")
@@ -605,7 +605,7 @@ def login(request):
     # 登录页面
 
     if request.method == 'GET':
-        context = {***REMOVED***
+        context = {}
         return render(request, 'blog/login.html', context)
     elif request.method == 'POST':
         email = request.POST.get('email')
@@ -617,7 +617,7 @@ def login(request):
                # context = {'the_url': reverse('blog:index'),
                #           'hint': '登录不成功,因为您被封禁',
                #           'page': '主页',
-               #       ***REMOVED***
+               #           }
                # return render(request, 'blog/hint.html', context)
                 return hint_and_redirect(request, reverse('blog:index'), '登录不成功,因为您被封禁')
 
@@ -628,18 +628,18 @@ def login(request):
                # context = {'the_url': reverse('blog:index'),
                #           'hint': '登录成功了',
                #           'page': '主页',
-               #       ***REMOVED***
+               #           }
                # return render(request, 'blog/hint.html', context)
                 return hint_and_redirect(request, reverse('blog:index'), '登录成功了', False)
 
             else:
                 context = {'err_msg': '密码错误',
-                       ***REMOVED***
+                           }
                 return render(request, 'blog/login.html', context)
 
         except models.User.DoesNotExist:
             context = {'err_msg': '此用户不存在',
-                   ***REMOVED***
+                       }
             return render(request, 'blog/login.html', context)
         except:
             return HttpResponse("出BUG了")
@@ -656,7 +656,7 @@ def logout(request):
    # context = {'the_url': reverse('blog:index'),
    #           'hint': '登出成功了',
    #           'page': '首页',
-   #       ***REMOVED***
+   #           }
    # return render(request, 'blog/hint.html', context)
     return hint_and_redirect(request, reverse('blog:index'), '登出成功了', False)
 

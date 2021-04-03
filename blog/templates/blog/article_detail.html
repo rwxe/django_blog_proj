@@ -1,55 +1,55 @@
 <!DOCTYPE html>
-{% extends "blog/base.html" %***REMOVED***
-{% load static %***REMOVED***
-{% block extra_head  %***REMOVED***
+{% extends "blog/base.html" %}
+{% load static %}
+{% block extra_head  %}
 <!--代码高亮 -->
-<link rel="stylesheet" href="{% get_static_prefix  %***REMOVED***md_css/{{article.codehilite_style***REMOVED******REMOVED***.css">
-{% endblock  %***REMOVED***
+<link rel="stylesheet" href="{% get_static_prefix  %}md_css/{{article.codehilite_style}}.css">
+{% endblock  %}
 
-{% block title %***REMOVED***{{article.title***REMOVED******REMOVED***{% endblock title %***REMOVED***
+{% block title %}{{article.title}}{% endblock title %}
 
-{% block content %***REMOVED***
+{% block content %}
 <div class="container">
     <div class="row">
         <!-- 展示文章的title -->
-        <h1 class="col-12 mt-4 mb-4">{{ article.title ***REMOVED******REMOVED***</h1>
+        <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>
         <!-- 展示文章的author -->
-        <div class="alert alert-success">作者：<a href="{% url 'blog:profile' article.author  %***REMOVED***" class="alert-link">{{ article.author ***REMOVED******REMOVED***</a></div>
+        <div class="alert alert-success">作者：<a href="{% url 'blog:profile' article.author  %}" class="alert-link">{{ article.author }}</a></div>
         <!-- 展示文章author的signature -->
-        <div class="alert alert-light">{{ article.author.signature ***REMOVED******REMOVED***</div>
+        <div class="alert alert-light">{{ article.author.signature }}</div>
         <div class="col-12"></div>
-        <div class="col-3 alert alert-light">创建于 {{ article.created |date:"Y/m/d H:i:s"***REMOVED******REMOVED***</div>
-        <div class="col-3 alert alert-light">更新于 {{ article.updated |date:"Y/m/d H:i:s"***REMOVED******REMOVED***</div>
+        <div class="col-3 alert alert-light">创建于 {{ article.created |date:"Y/m/d H:i:s"}}</div>
+        <div class="col-3 alert alert-light">更新于 {{ article.updated |date:"Y/m/d H:i:s"}}</div>
         <!-- 文章正文 -->
-        {%  if request.session.id == article.author.id  %***REMOVED***
+        {%  if request.session.id == article.author.id  %}
         <div class="dropdown">
             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 操作
             </a>
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="{% url 'blog:update_article' article.id %***REMOVED***">修改</a>
-                <a class="dropdown-item" href="{%  url 'blog:delete_article' article.id %***REMOVED***">删除</a>
+                <a class="dropdown-item" href="{% url 'blog:update_article' article.id %}">修改</a>
+                <a class="dropdown-item" href="{%  url 'blog:delete_article' article.id %}">删除</a>
             </div>
         </div>
-        {% if article.censored == False  %***REMOVED***
+        {% if article.censored == False  %}
         <div class="col-12 alert alert-info">待AI审核</div>
-        {% elif article.visible == False  %***REMOVED***
+        {% elif article.visible == False  %}
         <div class="col-12 alert alert-warning">AI审核不通过，请修改文章后提交</div>
-        {% elif article.visible == True  %***REMOVED***
+        {% elif article.visible == True  %}
         <div class="col-12 alert alert-success">AI审核通过</div>
-        {% endif  %***REMOVED***
-        {% endif  %***REMOVED***
+        {% endif  %}
+        {% endif  %}
         <div class="col-12 bg-light">
-            <p>{{ article.body |safe***REMOVED******REMOVED***</p>
+            <p>{{ article.body |safe}}</p>
         </div>
     </div>
     <!--评论版-->
-    {% if request.session.id %***REMOVED***
+    {% if request.session.id %}
     <div>
         <br/>
-        <form action="{% url 'blog:post_comment' article.id %***REMOVED***" method="POST" >
-            {% csrf_token %***REMOVED***
+        <form action="{% url 'blog:post_comment' article.id %}" method="POST" >
+            {% csrf_token %}
             <div class="form-group">
                 <label for="body">
                     <strong>
@@ -67,47 +67,47 @@
         </form>
     </div>
     <br>
-    {% else %***REMOVED***
+    {% else %}
     <br>
     <h5 class="row justify-content-center">
-        请<a href="{% url 'blog:login' %***REMOVED***">登录</a>后回复
+        请<a href="{% url 'blog:login' %}">登录</a>后回复
     </h5>
     <br>
-    {% endif %***REMOVED***
+    {% endif %}
     <div>
-        {% for comment in comments %***REMOVED***
+        {% for comment in comments %}
         <br>
 
-            {% if comment.user == article.author  %***REMOVED***
+            {% if comment.user == article.author  %}
             <div class="alert alert-success">
-                <a href="{% url 'blog:profile' comment.user  %***REMOVED***" class="alert-link">{{ comment.user ***REMOVED******REMOVED***&nbsp
+                <a href="{% url 'blog:profile' comment.user  %}" class="alert-link">{{ comment.user }}&nbsp
                 </a>
                 <span style="">
-                    {{ comment.created|date:"Y/m/d H:i:s" ***REMOVED******REMOVED***
+                    {{ comment.created|date:"Y/m/d H:i:s" }}
                 </span>
-                {% if comment.user.id == request.session.id  %***REMOVED***
-                <a href="{% url 'blog:delete_comment' comment.id %***REMOVED***?delete_comment=yes" class="alert-link">&nbsp&nbsp删除
-                {% endif  %***REMOVED***
+                {% if comment.user.id == request.session.id  %}
+                <a href="{% url 'blog:delete_comment' comment.id %}?delete_comment=yes" class="alert-link">&nbsp&nbsp删除
+                {% endif  %}
                 </a>
             </div>
-            {% else  %***REMOVED***
+            {% else  %}
             <div class="alert alert-info">
-                <a href="{% url 'blog:profile' comment.user  %***REMOVED***" class="alert-link">{{ comment.user ***REMOVED******REMOVED***&nbsp
+                <a href="{% url 'blog:profile' comment.user  %}" class="alert-link">{{ comment.user }}&nbsp
                 </a>
                 <span style="">
-                    {{ comment.created|date:"Y/m/d H:i:s" ***REMOVED******REMOVED***
+                    {{ comment.created|date:"Y/m/d H:i:s" }}
                 </span>
-                {% if comment.user.id == request.session.id  %***REMOVED***
-                <a href="{% url 'blog:delete_comment' comment.id %***REMOVED***?delete_comment=yes" class="alert-link">&nbsp&nbsp删除
-                {% endif  %***REMOVED***
+                {% if comment.user.id == request.session.id  %}
+                <a href="{% url 'blog:delete_comment' comment.id %}?delete_comment=yes" class="alert-link">&nbsp&nbsp删除
+                {% endif  %}
                 </a>
             </div>
-            {% endif  %***REMOVED***
+            {% endif  %}
         <div class="col-12 bg-light">
-            <p>{{ comment.body |safe***REMOVED******REMOVED***</p>
+            <p>{{ comment.body |safe}}</p>
         </div>
-        {% endfor %***REMOVED***
+        {% endfor %}
     </div>
 </div>
 
-{% endblock content %***REMOVED***
+{% endblock content %}

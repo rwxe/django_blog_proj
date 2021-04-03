@@ -1,4 +1,8 @@
 !.gitignore
+# for BFG
+passwords.txt
+.git.bfg-report/*
+tools.sh
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -68,7 +72,7 @@ db.sqlite3-journal
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
-# Django email smtp config
+# Django project personal config
 **/project_config.py
 
 

@@ -69,8 +69,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-    ***REMOVED***,
-***REMOVED***,
+        },
+    },
 ]
 
 WSGI_APPLICATION = 'bhcsc.wsgi.application'
@@ -88,16 +88,16 @@ DATABASES = project_config.DATABASES
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-***REMOVED***,
+    },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-***REMOVED***,
+    },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-***REMOVED***,
+    },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-***REMOVED***,
+    },
 ]
 
 
@@ -131,6 +131,6 @@ STATICFILES_DIRS = [BASE_DIR / 'static',]
 EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = project_config.EMAIL_HOST# 邮箱SMTP服务器地址
 EMAIL_PORT = project_config.EMAIL_PORT # SMTP服务的端口号
-***REMOVED***project_config.EMAIL_HOST_USER#你的邮箱，邮件发送者的邮箱
-***REMOVED***project_config.EMAIL_HOST_PASSWORD#你申请的授权码
+EMAIL_HOST_USER = project_config.EMAIL_HOST_USER#你的邮箱，邮件发送者的邮箱
+EMAIL_HOST_PASSWORD = project_config.EMAIL_HOST_PASSWORD#你申请的授权码
 EMAIL_USE_TLS = project_config.EMAIL_USE_TLS #与SMTP服务器通信时,是否启用安全模式

@@ -1,31 +1,31 @@
-{% extends "blog/base.html" %***REMOVED***
-{% load static %***REMOVED***
-{% block content %***REMOVED***
+{% extends "blog/base.html" %}
+{% load static %}
+{% block content %}
 <div class="container col-4 text-center justify-content-center ">
     <form action="#" class="form-signin " method="POST">
-        {% csrf_token %***REMOVED***
+        {% csrf_token %}
         <h1 class="h3 mb-3 font-weight-normal">注册</h1>
-        <input type="text" name="username" class="form-control" placeholder="用户名" value="{{username***REMOVED******REMOVED***" autocomplete="off" required>
-        <input type="email" name="email" class="form-control" placeholder="邮箱" value="{{email***REMOVED******REMOVED***" autocomplete="off" required>
-        <input type="password" name="password1" class="form-control" placeholder="密码" value="{{password1***REMOVED******REMOVED***" autocomplete="off" required>
-        <input type="password" name="password2" class="form-control" placeholder="确认密码" value="{{password2***REMOVED******REMOVED***" autocomplete="off" required>
+        <input type="text" name="username" class="form-control" placeholder="用户名" value="{{username}}" autocomplete="off" required>
+        <input type="email" name="email" class="form-control" placeholder="邮箱" value="{{email}}" autocomplete="off" required>
+        <input type="password" name="password1" class="form-control" placeholder="密码" value="{{password1}}" autocomplete="off" required>
+        <input type="password" name="password2" class="form-control" placeholder="确认密码" value="{{password2}}" autocomplete="off" required>
 
-        {% if sent == "yes"  %***REMOVED***
+        {% if sent == "yes"  %}
         <input type="text" name="verify_code" class="form-control" placeholder="请输入验证码" autocomplete="off">
         <button class="btn btn-lg btn-success btn-block" type="submit">注册</button>
-        {% else  %***REMOVED***
+        {% else  %}
         <input type="text" name="verify_code" class="form-control" placeholder="点击下方获取验证码" autocomplete="off">
         <button class="btn btn-lg btn-dark btn-block" type="submit">获取验证码</button>
-        {% endif  %***REMOVED***
+        {% endif  %}
 
     </form>
-    {%  if err_msg  %***REMOVED***
+    {%  if err_msg  %}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{err_msg***REMOVED******REMOVED***
+                {{err_msg}}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-    {%  endif  %***REMOVED***
+    {%  endif  %}
 </div>
-{% endblock content %***REMOVED***
+{% endblock content %}
