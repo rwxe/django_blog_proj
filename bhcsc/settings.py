@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 
+from . import project_config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -77,17 +79,7 @@ WSGI_APPLICATION = 'bhcsc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+DATABASES = project_config.DATABASES
 
 
 # Password validation
@@ -137,8 +129,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static',]
 # 端口: 587
 # 加密方法: STARTTLS
 EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
-***REMOVED***# 邮箱SMTP服务器地址
-***REMOVED***# SMTP服务的端口号
-***REMOVED***'anyxmfj@outlook.com' #你的邮箱，邮件发送者的邮箱
-***REMOVED***'forthejob1984' #你申请的授权码（略）
-***REMOVED***#与SMTP服务器通信时,是否启用安全模式
+EMAIL_HOST = project_config.EMAIL_HOST# 邮箱SMTP服务器地址
+EMAIL_PORT = project_config.EMAIL_PORT # SMTP服务的端口号
+***REMOVED***project_config.EMAIL_HOST_USER#你的邮箱，邮件发送者的邮箱
+***REMOVED***project_config.EMAIL_HOST_PASSWORD#你申请的授权码
+EMAIL_USE_TLS = project_config.EMAIL_USE_TLS #与SMTP服务器通信时,是否启用安全模式

@@ -87,6 +87,7 @@ def send_verify_code(request, to_email):
 
 @session_logger
 def guide_bulletin(request):
+    # 硬编码一篇文章，指定为网站公告
     return article_detail(request,15)
 
 def hint_and_redirect(request, the_url, hint, show_hint=True, delay_time=1000):

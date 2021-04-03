@@ -68,6 +68,9 @@ db.sqlite3-journal
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+# Django email smtp config
+**/project_config.py
+
 
 # Flask stuff:
 instance/
