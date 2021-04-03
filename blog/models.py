@@ -49,3 +49,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.user.username+':'+self.body[:20]
+
+class SessionLog(models.Model):
+    username=models.CharField(max_length=20,verbose_name='用户名')
+    server_name=models.CharField(max_length=100,verbose_name='访问地址')
+    ip=models.CharField(max_length=16,verbose_name='IP')
+
+    def __str__(self):
+        return self.username+' '+self.server_name+' '+self.ip

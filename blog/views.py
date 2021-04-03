@@ -14,13 +14,47 @@ import datetime
 import markdown
 import random
 from django.conf import settings
-import asyncio
-
+import sys
 # Create your views here.
+def get_request_ip(request):
+    try:
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]  # 所以这里是真实的ip
+        else:
+            ip = request.META.get('REMOTE_ADDR')  # 这里获得代理ip
+    except:
+        ip = '错误'
+
+    return ip
+
+def log_the_session(request):
+    session_log=models.SessionLog()
+    print("DEBUG",request.build_absolute_uri())
+
+    ip=get_request_ip(request)
+    server_name = request.build_absolute_uri()
+    username=request.session.get('username')
+
+    if username == None:
+        username="未登录"
+    session_log.username=username
+    session_log.server_name=server_name
+    session_log.ip=ip
+    session_log.save()
+
+def session_logger(func):
+    # 记录访问每个视图的用户名，URL，IP
+    def wrapper(*args, **kw):
+        # FOR DEBUG
+        print("args:", args)
+        print("kw:", kw)
+        request = args[0]
+        log_the_session(request)
+        return func(*args, **kw)
+    return wrapper
 
 
-def guide_bulletin(request):
-    return article_detail(request,15)
 
 
 def check_logged_in(func):
@@ -43,12 +77,17 @@ def check_logged_in(func):
 
 def send_verify_code(request, to_email):
     # 因为是发验证码，所以要有一个过期时间，这里设为5min后过期
+    # 如果使用普通的个人邮箱，会有每日发送限制和被锁定的可能
+    print("DEBUG MAIL",to_email)
     request.session.set_expiry(60*5)
     verify_code = random.randint(100000, 999999)
     request.session['verify_code'] = str(verify_code)
     msg = '您的验证码为 '+str(verify_code)+' ，请在三分钟内输入'
     mail.send_mail('您的验证码', msg, settings.EMAIL_HOST_USER, [to_email])
 
+@session_logger
+def guide_bulletin(request):
+    return article_detail(request,15)
 
 def hint_and_redirect(request, the_url, hint, show_hint=True, delay_time=1000):
     if show_hint == False:
@@ -61,6 +100,7 @@ def hint_and_redirect(request, the_url, hint, show_hint=True, delay_time=1000):
         return render(request, 'blog/hint.html', context)
 
 
+@session_logger
 def index(request):
     if 'search_text' in request.GET and request.GET.get('search_text').split() != []:
         search_text = request.GET.get('search_text')
@@ -85,6 +125,7 @@ def index(request):
     return render(request, 'blog/index.html', context)
 
 
+@session_logger
 def article_detail(request, article_id):
 
     article = get_object_or_404(models.Article, id=article_id)
@@ -117,6 +158,7 @@ def article_detail(request, article_id):
     return render(request, 'blog/article_detail.html', context)
 
 
+@session_logger
 @check_logged_in
 def post_comment(request, article_id):
 
@@ -145,6 +187,7 @@ def post_comment(request, article_id):
         return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '评论只支持POST形式发送')
 
 
+@session_logger
 @check_logged_in
 def delete_comment(request,comment_id):
     # 之所以用GET方法，完全是因为在前端方便写
@@ -164,6 +207,7 @@ def delete_comment(request,comment_id):
 
 
 
+@session_logger
 def profile(request, username):
     user = get_object_or_404(models.User, username=username)
     user.status = models.User.StatusList(user.status).label
@@ -186,6 +230,7 @@ def profile(request, username):
         return render(request, 'blog/profile.html', context)
 
 
+@session_logger
 @check_logged_in
 def edit_profile(request):
     try:
@@ -246,6 +291,7 @@ def edit_profile(request):
             return hint_and_redirect(request, reverse('blog:edit_profile'), '未知错误')
 
 
+@session_logger
 @check_logged_in
 def create_article(request):
     #   if 'username' not in request.session:
@@ -282,6 +328,7 @@ def create_article(request):
             return hint_and_redirect(request, reverse('blog:index'), '文章创建成功')
 
 
+@session_logger
 @check_logged_in
 def update_article(request, article_id):
     article = models.Article.objects.get(id=article_id)
@@ -321,6 +368,7 @@ def update_article(request, article_id):
             return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '文章修改成功', False)
 
 
+@session_logger
 @check_logged_in
 def delete_article(request, article_id):
     article = models.Article.objects.get(id=article_id)
@@ -355,6 +403,7 @@ def delete_article(request, article_id):
             return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '文章删除放弃')
 
 
+@session_logger
 def reset_password(request):
     if request.method == 'GET':
         # 是否发送了验证码
@@ -381,6 +430,16 @@ def reset_password(request):
         p2 = request.POST.get('password2')
         if request.session.get('sent') == 'no':
             send_verify_code(request, email)
+
+            try:
+                send_verify_code(request, email)
+            except:
+                request.session['sent'] = 'no'
+                context = {'err_msg': '验证码的发送出现了问题，这可能在短时间内无法解决，请改日再来',
+                           'sent': 'no',
+                       ***REMOVED***
+                return render(request, 'blog/reset_password.html', context)
+
             context = {'email': email,
                        'password1': p1,
                        'password2': p2,
@@ -433,6 +492,7 @@ def reset_password(request):
                 return HttpResponse("出BUG了")
 
 
+@session_logger
 def register(request):
     # 注册页面
     if request.method == 'GET':
@@ -451,7 +511,18 @@ def register(request):
         p1 = request.POST.get('password1')
         p2 = request.POST.get('password2')
         if request.session.get('sent') == 'no':
-            send_verify_code(request, email)
+            # 这里由于偷懒，并没有记录是否发送成功了
+            try:
+                send_verify_code(request, email)
+            except Exception as e:
+                print(e)
+                print(sys.exc_info())
+                request.session['sent'] = 'no'
+                context = {'err_msg': '验证码的发送出现了问题，这可能在短时间内无法解决，请改日再来',
+                           'sent': 'no',
+                       ***REMOVED***
+                return render(request, 'blog/register.html', context)
+
             context = {'username': username,
                        'email': email,
                        'password1': p1,
@@ -478,9 +549,11 @@ def register(request):
 
         new_user = models.User()
         username = request.POST.get('username')
-        new_user.email = request.POST.get('email')
+        # 邮箱也要检测是否唯一
+        email = request.POST.get('email')
         p1 = request.POST.get('password1')
         p2 = request.POST.get('password2')
+
         try:
             # 检测数据库中是否已存在同名用户，若抛出该用户
             # 名不存在异常，则为可以存入数据库
@@ -490,6 +563,17 @@ def register(request):
             return render(request, 'blog/register.html', context)
         except models.User.DoesNotExist:
             new_user.username = username
+
+        try:
+            # 检测数据库中是否已存在相同邮箱，若抛出该邮箱
+            # 不存在异常，则为可以存入数据库
+            models.User.objects.get(email=email)
+            context = {'err_msg': '此邮箱已存在，请更换一个',
+                   ***REMOVED***
+            return render(request, 'blog/register.html', context)
+        except models.User.DoesNotExist:
+            new_user.email = email
+
         if p1 != p2:
             context = {'err_msg': '两次输入的密码不同，请检查是否有误',
                    ***REMOVED***
@@ -515,6 +599,7 @@ def register(request):
                 return HttpResponse("出BUG了")
 
 
+@session_logger
 def login(request):
     # 登录页面
 
@@ -561,6 +646,7 @@ def login(request):
         return HttpResponse("出BUG了")
 
 
+@session_logger
 def logout(request):
     # 读者登出
     if 'username' in request.session:
@@ -572,3 +658,4 @@ def logout(request):
    #       ***REMOVED***
    # return render(request, 'blog/hint.html', context)
     return hint_and_redirect(request, reverse('blog:index'), '登出成功了', False)
+
