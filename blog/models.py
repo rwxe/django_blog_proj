@@ -54,6 +54,6 @@ class SessionLog(models.Model):
     username=models.CharField(max_length=20,verbose_name='用户名')
     server_name=models.CharField(max_length=100,verbose_name='访问地址')
     ip=models.CharField(max_length=16,verbose_name='IP')
-
+    time = models.DateTimeField(default=timezone.now, verbose_name='访问时间')
     def __str__(self):
-        return self.username+' '+self.server_name+' '+self.ip
+        return self.ip+' '+self.username+' '+self.time.strftime('%Y-%m-%d %H:%M:%S')+' '+self.server_name
