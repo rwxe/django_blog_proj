@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+{% load static %}
+    <title></title>
+<style>
+blockquote {
+	padding: 0 15px;
+	color: #777;
+	border-left: 4px solid #ddd;
+}
+</style>
+<link rel="stylesheet" href="{% get_static_prefix  %}md_css/{{article.codehilite_style}}.css">
+</head>
+<body>
+    
+            <p>{{ article.body |safe}}</p>
+</body>
+</html>

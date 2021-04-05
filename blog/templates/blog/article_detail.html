@@ -4,6 +4,14 @@
 {% block extra_head  %}
 <!--代码高亮 -->
 <link rel="stylesheet" href="{% get_static_prefix  %}md_css/{{article.codehilite_style}}.css">
+
+<style>
+blockquote {
+	padding: 0 15px;
+	color: #777;
+	border-left: 4px solid #ddd;
+}
+</style>
 {% endblock  %}
 
 {% block title %}{{article.title}}{% endblock title %}

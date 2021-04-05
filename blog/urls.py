@@ -5,8 +5,9 @@ from . import views
 
 app_name= 'blog'
 urlpatterns = [
-        path('guide_bulletin',views.guide_bulletin,name='guide_bulletin'),
+        path('qft',views.qft,name='qft'),
         path('',views.index,name='index'),
+        path('guide_bulletin',views.guide_bulletin,name='guide_bulletin'),
         path('register',views.register,name='register'),
         path('login',views.login,name='login'),
         path('logout',views.logout,name='logout'),

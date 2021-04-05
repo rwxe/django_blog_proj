@@ -85,6 +85,14 @@ def send_verify_code(request, to_email):
     msg = '您的验证码为 '+str(verify_code)+' ，请在三分钟内输入'
     mail.send_mail('您的验证码', msg, settings.EMAIL_HOST_USER, [to_email])
 
+# 以下是视图
+
+def qft(request):
+    # quick feature test
+    pass
+
+
+
 @session_logger
 def guide_bulletin(request):
     # 硬编码一篇文章，指定为网站公告
