@@ -15,6 +15,7 @@ import markdown
 import random
 from django.conf import settings
 import sys
+import urllib
 # Create your views here.
 def get_request_ip(request):
     try:
@@ -34,6 +35,11 @@ def log_the_session(request):
 
     ip=get_request_ip(request)
     server_name = request.build_absolute_uri()
+    # 将编码后的中文解码回中文
+    server_name = urllib.parse.unquote(server_name)
+    if len(server_name)>100:
+        #超过一定长度的地址截断，然后加上省略号
+        server_name=server_name[:97]+'...'
     username=request.session.get('username')
 
     if username == None:
@@ -82,7 +88,7 @@ def send_verify_code(request, to_email):
     request.session.set_expiry(60*5)
     verify_code = random.randint(100000, 999999)
     request.session['verify_code'] = str(verify_code)
-    msg = '您的验证码为 '+str(verify_code)+' ，请在三分钟内输入'
+    msg = '您的验证码为 '+str(verify_code)+' ，请在五分钟内输入'
     mail.send_mail('您的验证码', msg, settings.EMAIL_HOST_USER, [to_email])
 
 # 以下是视图
