@@ -56,15 +56,22 @@
             <!-- 文章内容 -->
             <div class="col-12 mb-4">
                 <!-- 卡片容器 -->
-                {% if article.censored == False  %}
-                <div class="card h-100 text-white bg-secondary">
-                    <h4 class="card-header">{{ article.title }}<span class="text-dark">(待AI审核)</span></h4>
-                {% elif article.visible == False  %}
-                <div class="card h-100 text-white bg-danger">
-                    <h4 class="card-header">{{ article.title }}<span class="text-dark">(AI审核不通过)</span></h4>
-                {% elif article.visible == True  %}
-                <div class="card h-100 text-white bg-success">
-                    <h4 class="card-header">{{ article.title }}<span class="text-dark">(AI审核通过)</span></h4>
+
+                {%  if request.session.id == article.author.id  %}
+
+                    {% if article.censored == False  %}
+                    <div class="card h-100 text-white bg-secondary">
+                        <h4 class="card-header">{{ article.title }}<span class="text-dark">(待审核)</span></h4>
+                    {% elif article.visible == False  %}
+                    <div class="card h-100 text-white bg-danger">
+                        <h4 class="card-header">{{ article.title }}<span class="text-dark">(审核不通过)</span></h4>
+                    {% elif article.visible == True  %}
+                    <div class="card h-100 text-white bg-success">
+                        <h4 class="card-header">{{ article.title }}<span class="text-dark">(审核通过)</span></h4>
+                    {% endif  %}
+                {% else  %}
+                    <div class="card h-100 ">
+                        <h4 class="card-header">{{ article.title }}</h4>
                 {% endif  %}
 
 
