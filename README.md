@@ -109,7 +109,10 @@ python manage.py createsuperuser
 通过访问`你的网址/admin`，比如`http://127.0.0.1:8000/admin`，进行管理。  
 
 用户（User）模型有一个状态（status）字段，可以修改用户的状态，正常、封禁、注销。  
-文章（Article）模型有两个字段，可见（visible）和已审核（censored），分别控制文章是否可见和是否已经被审核。  
+文章（Article）模型有两个字段，可见（visible）和已审核（censored），分别控制文章是否可见和是否已经被审核。网站管理员可以在`blog/models.py`将相应的字段的默认值（default）设为`False`，然后进行人工或其他手段审核，以达到先审核后可见的功能。  
+网站导航栏有一个名为`快速功能测试`的入口，该功能是为了在开发中快速测试新功能时使用的，建议在部署后，在`blog/templates/header.html`、`blog/urls.py`中注释掉有关`qft`的代码。  
+
+# 其他功能
 
 ## 致谢
 
