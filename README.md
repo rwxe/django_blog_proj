@@ -3,10 +3,6 @@
 一个普通的 Django 博客，或是论坛。之所以有论坛的属性，是因为在开发中，加入了用户注册和发文的功能，当然网站的搭建者可以选择注释掉这些功能。  
 目前已经有了博客的主要功能：注册、登录、发文、评论、搜索文章。管理员可通过 Django 自带的管理页面对文章、用户进行管理。  
 
-## 内容列表
-
-之后再写目录  
-
 ## 背景
 
 这是一个本人为了学习和练习 Django 框架所写出的项目，项目开发时使用的 Django 版本为3.1，Python 版本为3.8.6 。项目中功能的实现方式未必是最优秀的，主要用以供大家参考学习。  
@@ -102,7 +98,7 @@ python manage.py runserver 0.0.0.0:80 --insecure
 这里以 Linux 的 Ubuntu 发行版为示范，使用nginx + uwsgi + django + linux 的架构部署该项目  
 具体可参考uwsgi的官方[指导文档](https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html#setting-up-django-and-your-web-server-with-uwsgi-and-nginx)
 
-注意，在开发环境中，必须将`settings.py`中设置`DEBUG = False`。  
+注意，在开发环境中，为了安全，必须将`settings.py`中设置`DEBUG = False`。  
 
 ## 管理
 
