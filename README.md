@@ -58,6 +58,15 @@ pip install mysqlclient
 pip install -r requirements.txt
 ```
 
+### 配置数据库
+
+在`project_config.py`中配置好数据库名称和给 Django 的用户名和密码后，你还需在你的数据库管理系统（如 MySQL）中创建相应的用户、数据库，并授权相应的权限。  
+然后你需要让 Django 在数据库内创建相应的数据表，因此需要执行 Django 的数据迁移。  
+```sh
+python manage.py makemigrations
+python manage.py migrate
+```
+
 ## 使用说明
 
 ### 开发环境运行
@@ -92,6 +101,8 @@ python manage.py runserver 0.0.0.0:80 --insecure
 
 这里以 Linux 的 Ubuntu 发行版为示范，使用nginx + uwsgi + django + linux 的架构部署该项目  
 具体可参考uwsgi的官方[指导文档](https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html#setting-up-django-and-your-web-server-with-uwsgi-and-nginx)
+
+注意，在开发环境中，必须将`settings.py`中设置`DEBUG = False`。  
 
 ## 管理
 
