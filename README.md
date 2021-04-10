@@ -93,6 +93,17 @@ python manage.py runserver 0.0.0.0:80 --insecure
 这里以 Linux 的 Ubuntu 发行版为示范，使用nginx + uwsgi + django + linux 的架构部署该项目  
 具体可参考uwsgi的官方[指导文档](https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html#setting-up-django-and-your-web-server-with-uwsgi-and-nginx)
 
+## 管理
+
+创建超级用户  
+```sh
+python manage.py createsuperuser
+```
+通过访问`你的网址/admin`，比如`http://127.0.0.1:8000/admin`，进行管理。  
+
+用户（User）模型有一个状态（status）字段，可以修改用户的状态，正常、封禁、注销。  
+文章（Article）模型有两个字段，可见（visible）和已审核（censored），分别控制文章是否可见和是否已经被审核。  
+
 ## 致谢
 
 本项目参考了[ stacklens/django_blog_tutorial ](https://github.com/stacklens/django_blog_tutorial)
