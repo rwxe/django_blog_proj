@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'blog.middlewares.SessionLogger'
 ]
 
 ROOT_URLCONF = 'proj.urls'
@@ -80,6 +81,7 @@ WSGI_APPLICATION = 'proj.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = project_config.DATABASES
+CACHES = project_config.CACHES
 
 
 # Password validation

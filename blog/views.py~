@@ -94,13 +94,13 @@ def send_verify_code(request, to_email):
 
 # 以下是视图
 
-#@django.views.decorators.cache.cache_page(30)
+@django.views.decorators.cache.cache_page(60*100)
 def qft(request):
     # quick feature test
     if cache.cache.get('time_now_qft') == None:
         print("DEBUG",'读取了缓存')
         time_now_qft=timezone.now()
-        cache.cache.set('time_now_qft',time_now_qft)
+        cache.cache.set('time_now_qft',time_now_qft,10)
     else:
         print("DEBUG",'读取了缓存')
         time_now_qft=cache.cache.get('time_now_qft')
@@ -110,6 +110,7 @@ def qft(request):
 
 
 
+@session_logger
 def guide_bulletin(request):
     # 硬编码一篇文章，指定为网站公告
     return article_detail(request,15)
@@ -125,7 +126,7 @@ def hint_and_redirect(request, the_url, hint, show_hint=True, delay_time=1000):
         return render(request, 'blog/hint.html', context)
 
 
-
+@session_logger
 def index(request):
     if 'search_text' in request.GET and request.GET.get('search_text').split() != []:
         search_text = request.GET.get('search_text')
@@ -150,6 +151,7 @@ def index(request):
     return render(request, 'blog/index.html', context)
 
 
+@session_logger
 def article_detail(request, article_id):
 
     article = get_object_or_404(models.Article, id=article_id)
@@ -182,6 +184,7 @@ def article_detail(request, article_id):
     return render(request, 'blog/article_detail.html', context)
 
 
+@session_logger
 @check_logged_in
 def post_comment(request, article_id):
 
@@ -210,6 +213,7 @@ def post_comment(request, article_id):
         return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '评论只支持POST形式发送')
 
 
+@session_logger
 @check_logged_in
 def delete_comment(request,comment_id):
     # 之所以用GET方法，完全是因为在前端方便写
@@ -229,6 +233,7 @@ def delete_comment(request,comment_id):
 
 
 
+@session_logger
 def profile(request, username):
     user = get_object_or_404(models.User, username=username)
     user.status = models.User.StatusList(user.status).label
@@ -251,6 +256,7 @@ def profile(request, username):
         return render(request, 'blog/profile.html', context)
 
 
+@session_logger
 @check_logged_in
 def edit_profile(request):
     try:
@@ -311,6 +317,7 @@ def edit_profile(request):
             return hint_and_redirect(request, reverse('blog:edit_profile'), '未知错误')
 
 
+@session_logger
 @check_logged_in
 def create_article(request):
     #   if 'username' not in request.session:
@@ -347,6 +354,7 @@ def create_article(request):
             return hint_and_redirect(request, reverse('blog:index'), '文章创建成功')
 
 
+@session_logger
 @check_logged_in
 def update_article(request, article_id):
     article = models.Article.objects.get(id=article_id)
@@ -386,6 +394,7 @@ def update_article(request, article_id):
             return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '文章修改成功', False)
 
 
+@session_logger
 @check_logged_in
 def delete_article(request, article_id):
     article = models.Article.objects.get(id=article_id)
@@ -420,6 +429,7 @@ def delete_article(request, article_id):
             return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '文章删除放弃')
 
 
+@session_logger
 def reset_password(request):
     if request.method == 'GET':
         # 是否发送了验证码
@@ -508,6 +518,7 @@ def reset_password(request):
                 return HttpResponse("出BUG了")
 
 
+@session_logger
 def register(request):
     # 注册页面
     if request.method == 'GET':
@@ -614,6 +625,7 @@ def register(request):
                 return HttpResponse("出BUG了")
 
 
+@session_logger
 def login(request):
     # 登录页面
 
@@ -660,6 +672,7 @@ def login(request):
         return HttpResponse("出BUG了")
 
 
+@session_logger
 def logout(request):
     # 读者登出
     if 'username' in request.session:
