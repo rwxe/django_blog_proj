@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.db.utils import DataError
 from django.urls import reverse
 from django.contrib.auth import hashers
-from django.core import mail, cache
+from django.core import mail,cache
 from django.db.models import Q
 from . import models
 import random
@@ -16,7 +16,52 @@ import markdown
 import random
 from django.conf import settings
 import sys
+import urllib
 # Create your views here.
+def get_request_ip(request):
+    try:
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]  # 所以这里是真实的ip
+        else:
+            ip = request.META.get('REMOTE_ADDR')  # 这里获得代理ip
+    except:
+        ip = '错误'
+
+    return ip
+
+def log_the_session(request):
+    session_log=models.SessionLog()
+    print("DEBUG",request.build_absolute_uri())
+
+    ip=get_request_ip(request)
+    server_name = request.build_absolute_uri()
+    # 将编码后的中文解码回中文
+    server_name = urllib.parse.unquote(server_name)
+    if len(server_name)>100:
+        #超过一定长度的地址截断，然后加上省略号
+        server_name=server_name[:97]+'...'
+    username=request.session.get('username')
+
+    if username == None:
+        username="未登录"
+    session_log.username=username
+    session_log.server_name=server_name
+    session_log.ip=ip
+    session_log.save()
+
+def session_logger(func):
+    # 记录访问每个视图的用户名，URL，IP
+    def wrapper(*args, **kw):
+        # FOR DEBUG
+        print("args:", args)
+        print("kw:", kw)
+        request = args[0]
+        log_the_session(request)
+        return func(*args, **kw)
+    return wrapper
+
+
 
 
 def check_logged_in(func):
@@ -40,7 +85,7 @@ def check_logged_in(func):
 def send_verify_code(request, to_email):
     # 因为是发验证码，所以要有一个过期时间，这里设为5min后过期
     # 如果使用普通的个人邮箱，会有每日发送限制和被锁定的可能
-    print("DEBUG MAIL", to_email)
+    print("DEBUG MAIL",to_email)
     request.session.set_expiry(60*5)
     verify_code = random.randint(100000, 999999)
     request.session['verify_code'] = str(verify_code)
@@ -49,26 +94,26 @@ def send_verify_code(request, to_email):
 
 # 以下是视图
 
-# @django.views.decorators.cache.cache_page(30)
-
-
+@django.views.decorators.cache.cache_page(60*100)
 def qft(request):
     # quick feature test
     if cache.cache.get('time_now_qft') == None:
-        print("DEBUG", '读取了缓存')
-        time_now_qft = timezone.now()
-        cache.cache.set('time_now_qft', time_now_qft)
+        print("DEBUG",'读取了缓存')
+        time_now_qft=timezone.now()
+        cache.cache.set('time_now_qft',time_now_qft,10)
     else:
-        print("DEBUG", '读取了缓存')
-        time_now_qft = cache.cache.get('time_now_qft')
+        print("DEBUG",'读取了缓存')
+        time_now_qft=cache.cache.get('time_now_qft')
+
 
     return HttpResponse(time_now_qft)
 
 
+
+@session_logger
 def guide_bulletin(request):
     # 硬编码一篇文章，指定为网站公告
-    return article_detail(request, 15)
-
+    return article_detail(request,15)
 
 def hint_and_redirect(request, the_url, hint, show_hint=True, delay_time=1000):
     if show_hint == False:
@@ -81,6 +126,7 @@ def hint_and_redirect(request, the_url, hint, show_hint=True, delay_time=1000):
         return render(request, 'blog/hint.html', context)
 
 
+@session_logger
 def index(request):
     if 'search_text' in request.GET and request.GET.get('search_text').split() != []:
         search_text = request.GET.get('search_text')
@@ -105,14 +151,15 @@ def index(request):
     return render(request, 'blog/index.html', context)
 
 
+@session_logger
 def article_detail(request, article_id):
 
     article = get_object_or_404(models.Article, id=article_id)
     try:
-        comments = models.Comment.objects.filter(article=article)
-        print("DEBUG", comments)
+        comments= models.Comment.objects.filter(article=article)
+        print("DEBUG",comments)
     except models.Comment.DoesNotExist:
-        comments = None
+        comments=None
     if article.visible == False and 'username' not in request.session:
         raise Http404()
     article.body = markdown.markdown(article.body,
@@ -125,18 +172,19 @@ def article_detail(request, article_id):
     if comments != None:
         for c in comments:
             c.body = markdown.markdown(c.body,
-                                       extensions=[
-                                           # 包含 缩写、表格等常用扩展
-                                           'markdown.extensions.extra',
-                                           # 语法高亮扩展
-                                           'markdown.extensions.codehilite',
-                                       ])
+                                             extensions=[
+                                                 # 包含 缩写、表格等常用扩展
+                                                 'markdown.extensions.extra',
+                                                 # 语法高亮扩展
+                                                 'markdown.extensions.codehilite',
+                                             ])
 
     context = {'article': article,
-               'comments': comments}
+            'comments':comments}
     return render(request, 'blog/article_detail.html', context)
 
 
+@session_logger
 @check_logged_in
 def post_comment(request, article_id):
 
@@ -145,7 +193,7 @@ def post_comment(request, article_id):
         user = get_object_or_404(models.User, id=request.session.get('id'))
         body = request.POST.get('body')
         if body.split() == []:
-            return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '评论不能为空')
+            return hint_and_redirect(request, reverse('blog:article_detail',args=[article_id]), '评论不能为空')
 
         new_comment = models.Comment()
         new_comment.article = article
@@ -154,7 +202,7 @@ def post_comment(request, article_id):
 
         try:
             new_comment.save()
-            return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '评论成功', False)
+            return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '评论成功',False)
         except DataError:
             return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '数据错误，请检查内容重新发送')
         except:
@@ -165,16 +213,17 @@ def post_comment(request, article_id):
         return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '评论只支持POST形式发送')
 
 
+@session_logger
 @check_logged_in
-def delete_comment(request, comment_id):
+def delete_comment(request,comment_id):
     # 之所以用GET方法，完全是因为在前端方便写
     if request.method == 'GET':
         print('收到了get方法')
         print(request.GET.get('delete_comment'))
         if request.GET.get('delete_comment') == 'yes':
             print('DEBUG')
-            comment = get_object_or_404(models.Comment, id=comment_id)
-            article_id = comment.article.id
+            comment=get_object_or_404(models.Comment,id=comment_id)
+            article_id=comment.article.id
             if request.session.get('id') == comment.user.id:
                 print("DEBUG session id 和 comment user id 一样")
                 comment.delete()
@@ -183,6 +232,8 @@ def delete_comment(request, comment_id):
                 return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '您不是评论用户本人，删除评论失败')
 
 
+
+@session_logger
 def profile(request, username):
     user = get_object_or_404(models.User, username=username)
     user.status = models.User.StatusList(user.status).label
@@ -205,6 +256,7 @@ def profile(request, username):
         return render(request, 'blog/profile.html', context)
 
 
+@session_logger
 @check_logged_in
 def edit_profile(request):
     try:
@@ -265,6 +317,7 @@ def edit_profile(request):
             return hint_and_redirect(request, reverse('blog:edit_profile'), '未知错误')
 
 
+@session_logger
 @check_logged_in
 def create_article(request):
     #   if 'username' not in request.session:
@@ -301,6 +354,7 @@ def create_article(request):
             return hint_and_redirect(request, reverse('blog:index'), '文章创建成功')
 
 
+@session_logger
 @check_logged_in
 def update_article(request, article_id):
     article = models.Article.objects.get(id=article_id)
@@ -340,6 +394,7 @@ def update_article(request, article_id):
             return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '文章修改成功', False)
 
 
+@session_logger
 @check_logged_in
 def delete_article(request, article_id):
     article = models.Article.objects.get(id=article_id)
@@ -374,6 +429,7 @@ def delete_article(request, article_id):
             return hint_and_redirect(request, reverse('blog:article_detail', args=[article_id]), '文章删除放弃')
 
 
+@session_logger
 def reset_password(request):
     if request.method == 'GET':
         # 是否发送了验证码
@@ -462,6 +518,7 @@ def reset_password(request):
                 return HttpResponse("出BUG了")
 
 
+@session_logger
 def register(request):
     # 注册页面
     if request.method == 'GET':
@@ -568,6 +625,7 @@ def register(request):
                 return HttpResponse("出BUG了")
 
 
+@session_logger
 def login(request):
     # 登录页面
 
@@ -614,6 +672,7 @@ def login(request):
         return HttpResponse("出BUG了")
 
 
+@session_logger
 def logout(request):
     # 读者登出
     if 'username' in request.session:
@@ -625,3 +684,4 @@ def logout(request):
    #           }
    # return render(request, 'blog/hint.html', context)
     return hint_and_redirect(request, reverse('blog:index'), '登出成功了', False)
+

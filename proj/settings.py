@@ -52,6 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'blog.middlewares.SessionLogger',
+    'blog.middlewares.VisitLimit',
 ]
 
 ROOT_URLCONF = 'proj.urls'
@@ -80,6 +82,7 @@ WSGI_APPLICATION = 'proj.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = project_config.DATABASES
+CACHES = project_config.CACHES
 
 
 # Password validation
@@ -134,3 +137,6 @@ EMAIL_PORT = project_config.EMAIL_PORT # SMTP服务的端口号
 EMAIL_HOST_USER = project_config.EMAIL_HOST_USER#你的邮箱，邮件发送者的邮箱
 EMAIL_HOST_PASSWORD = project_config.EMAIL_HOST_PASSWORD#你申请的授权码
 EMAIL_USE_TLS = project_config.EMAIL_USE_TLS #与SMTP服务器通信时,是否启用安全模式
+
+# 每个IP 每分钟访问次数
+IP_QPM = project_config.IP_QPM
